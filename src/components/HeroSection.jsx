@@ -21,35 +21,59 @@ const HeroSection = () => {
       <div className="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
           <div className="relative">
-            {/* Content backdrop for better readability */}
+            {/* Content backdrop */}
             <div className="absolute inset-0 transform bg-white bg-opacity-40 blur-3xl rounded-3xl -rotate-1"></div>
 
             <div className="relative z-10 p-8">
-              <p className="text-base font-semibold tracking-wider text-red-600 uppercase animate-fade-in">
-                upGrad School of Technology
-              </p>
-              <h1 className="mt-4 text-4xl font-bold leading-tight text-black lg:mt-8 sm:text-6xl xl:text-8xl animate-fade-in-up">
-                Young Innovator{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500 animate-pulse">
+              {/* Fixed Main Heading */}
+              <h1 className="mt-4 text-4xl font-bold leading-tight text-black lg:mt-6 sm:text-6xl xl:text-7xl animate-fade-in-up">
+                uGSOT D.R.I.P.{" "}
+                <span className="text-transparent bg-clip-text bg-red-600 animate-pulse">
                   Internship
                 </span>{" "}
                 Challenge
               </h1>
-              <p
-                className="mt-4 text-base text-black lg:mt-8 sm:text-xl animate-fade-in-up"
-                style={{ animationDelay: "0.2s" }}
-              >
-                A unique{" "}
-                <span className="font-semibold text-red-600">internship</span>{" "}
-                challenge designed by the best in tech.
+
+              {/* Subtitle Line */}
+              <p className="mt-2 text-lg font-medium text-gray-700 sm:text-2xl animate-fade-in-up">
+                Dream • Rise • Innovate • Perform
               </p>
 
+              {/* Short description */}
+              <p
+                className="mt-4 text-base text-black lg:mt-6 sm:text-xl animate-fade-in-up"
+                style={{ animationDelay: "0.2s" }}
+              >
+                Dive into hands-on innovation with{" "}
+                <span className="font-semibold text-red-600">uGSOT</span>, 
+                designed for Grade 11 & Grade 12 students.
+              </p>
+
+              {/* Dates and Format */}
+              <div
+                className="mt-6 text-black space-y-2 sm:text-lg animate-fade-in-up"
+                style={{ animationDelay: "0.3s" }}
+              >
+                <p><span className="font-semibold text-red-600">Starts:</span> [Insert Date & Time]</p>
+                <p><span className="font-semibold text-red-600">Ends:</span> [Insert Date & Time]</p>
+                <p><span className="font-semibold text-red-600">Mode:</span> Online</p>
+              </div>
+
+              {/* Eligibility */}
+              <p
+                className="mt-6 text-sm font-medium text-gray-700 bg-gray-100 px-4 py-2 rounded-full inline-block animate-fade-in-up"
+                style={{ animationDelay: "0.4s" }}
+              >
+                Open to students of Grades 11th & 12th Standard
+              </p>
+
+              {/* CTA */}
               <a
                 href="#"
                 title=""
-                className="inline-flex items-center px-8 py-4 mt-8 font-semibold text-white transition-all duration-300 transform rounded-full shadow-lg bg-gradient-to-r from-red-500 to-orange-500 lg:mt-16 hover:from-red-600 hover:to-orange-600 focus:from-red-600 focus:to-orange-600 hover:scale-105 hover:shadow-xl animate-fade-in-up"
+                className="inline-flex items-center px-8 py-4 mt-8 font-semibold text-white transition-all duration-300 transform rounded-full shadow-lg bg-red-600 lg:mt-12 hover:from-red-600 hover:to-orange-600 focus:from-red-600 focus:to-orange-600 hover:scale-105 hover:shadow-xl animate-fade-in-up"
                 role="button"
-                style={{ animationDelay: "0.4s" }}
+                style={{ animationDelay: "0.5s" }}
               >
                 Apply Now
                 <svg
@@ -67,20 +91,6 @@ const HeroSection = () => {
                   />
                 </svg>
               </a>
-
-              <p
-                className="mt-5 text-gray-600 animate-fade-in-up"
-                style={{ animationDelay: "0.6s" }}
-              >
-                Already joined us?{" "}
-                <a
-                  href="#"
-                  title=""
-                  className="font-medium text-black transition-all duration-200 hover:underline"
-                >
-                  Log in
-                </a>
-              </p>
             </div>
           </div>
 
@@ -89,7 +99,7 @@ const HeroSection = () => {
               <img
                 className="w-full"
                 src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/1/hero-img.png"
-                alt="Young Innovator Challenge"
+                alt="uGSOT DRIP Internship Challenge"
               />
             </div>
           </div>

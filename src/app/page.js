@@ -12,11 +12,11 @@ export default function Home() {
     <>
       <Navbar />
       <HeroSection />
-      <RegistrationForm />
       <Introduction />
+      <RegistrationForm />
       <Reward />
       <Session />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

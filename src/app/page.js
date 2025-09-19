@@ -5,18 +5,32 @@ import Introduction from "@/components/Introduction";
 import Reward from "@/components/Reward";
 import Session from "@/components/Session";
 import Footer from "@/components/Footer";
-
+import AfterInternship from "@/components/AfterInternship";
+import WhyAttend from "@/components/WhyAttend";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <HeroSection />
-      <Introduction />
-      <RegistrationForm />
-      <Reward />
-      <Session />
-      {/* <Footer /> */}
+      <div id="hero">
+        <HeroSection />
+      </div>
+      <div id="introduction">
+        <Introduction />
+      </div>
+      <div id="reward">
+        <Reward />
+      </div>
+      <div id="why-attend">
+        <WhyAttend />
+      </div>
+      <div id="after-internship">
+        <AfterInternship />
+      </div>
+      <div id="session">
+        <Session />
+      </div>
+      <Footer />
     </>
   );
 }

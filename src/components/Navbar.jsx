@@ -6,6 +6,30 @@ import Image from "next/image";
 export default function DalimNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Smooth scroll function
+  const smoothScrollTo = (elementId) => {
+    // Close mobile menu first
+    setIsOpen(false);
+    
+    // Add a small delay to ensure the element is rendered
+    setTimeout(() => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        // Calculate offset for sticky navbar (adjust 80px as needed)
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      } else {
+        console.log(`Element with id "${elementId}" not found`);
+      }
+    }, 100);
+  };
+
   return (
     <div className="sticky top-0 z-50">
       <nav className="sticky top-0 z-50 border-b shadow-lg bg-white/70 backdrop-blur-xl border-white/20 shadow-black/5">
@@ -13,32 +37,55 @@ export default function DalimNavbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <a href="#">
+              <button onClick={() => smoothScrollTo('hero')}>
                 <Image
-                  src="/assets/Logo.png" // ✅ Public folder path
+                  src="/assets/Logo.png" 
                   alt="Logo"
                   width={150}
                   height={50}
-                  className="w-auto h-12"
+                  className="w-auto h-12 cursor-pointer"
                 />
-              </a>
+              </button>
             </div>
 
             {/* Navigation Links */}
             <div className="hidden md:block">
               <div className="flex items-baseline ml-10 space-x-8">
-                <a href="#products" className="px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                  Products
-                </a>
-                <a href="#designs" className="px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                  Designs
-                </a>
-                <a href="#pricing" className="px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                  Pricing
-                </a>
-                <a href="#about" className="px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
+                <button 
+                  onClick={() => smoothScrollTo('hero')}
+                  className="relative px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+                >
+                  Home
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('introduction')}
+                  className="relative px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+                >
                   About
-                </a>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('why-attend')}
+                  className="relative px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+                >
+                  Benefits
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('session')}
+                  className="relative px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+                >
+                  Sessions
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                 <button 
+                  onClick={() => smoothScrollTo('hero')}
+                  className="relative px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+                >
+                  Register
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
               </div>
             </div>
 
@@ -46,7 +93,7 @@ export default function DalimNavbar() {
             <div className="md:hidden">
               <button
                 type="button"
-                className="text-gray-600 hover:text-black focus:outline-none focus:text-black"
+                className="text-gray-600 hover:text-black focus:outline-none focus:text-black transition-colors duration-200"
                 onClick={() => setIsOpen(!isOpen)}
               >
                 <svg
@@ -68,18 +115,41 @@ export default function DalimNavbar() {
             }`}
           >
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-              <a href="#products" className="block px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                Products
-              </a>
-              <a href="#designs" className="block px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                Designs
-              </a>
-              <a href="#pricing" className="block px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
-                Pricing
-              </a>
-              <a href="#about" className="block px-3 py-2 text-lg font-medium text-gray-600 hover:text-black">
+              <button 
+                onClick={() => smoothScrollTo('hero')}
+                className="relative block w-full text-left px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+              >
+                Home
+                <span className="absolute bottom-0 left-3 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-16"></span>
+              </button>
+              <button 
+                onClick={() => smoothScrollTo('introduction')}
+                className="relative block w-full text-left px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+              >
                 About
-              </a>
+                <span className="absolute bottom-0 left-3 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-16"></span>
+              </button>
+              <button 
+                onClick={() => smoothScrollTo('why-attend')}
+                className="relative block w-full text-left px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+              >
+                Benefits
+                <span className="absolute bottom-0 left-3 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-20"></span>
+              </button>
+              <button 
+                onClick={() => smoothScrollTo('session')}
+                className="relative block w-full text-left px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+              >
+                Sessions
+                <span className="absolute bottom-0 left-3 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-20"></span>
+              </button>
+              <button 
+                onClick={() => smoothScrollTo('hero')}
+                className="relative block w-full text-left px-3 py-2 text-lg font-medium text-gray-600 hover:text-red-600 transition-colors duration-300 cursor-pointer group"
+              >
+                Register
+                <span className="absolute bottom-0 left-3 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-20"></span>
+              </button>
             </div>
           </div>
         </div>

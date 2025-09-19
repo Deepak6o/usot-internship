@@ -14,33 +14,28 @@ export default function ChallengeSection() {
 
       <section
         className="relative flex flex-col items-center justify-center mx-auto max-w-8xl w-full text-center py-20 md:py-28 
-        bg-[url('/assets/banner.png')] bg-cover bg-center bg-no-repeat"
+        bg-[url('/assets/banner1.jpg')] bg-cover bg-center bg-no-repeat"
       >
         {/* Black overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/80"></div>
 
         {/* Content */}
         <div className="relative z-10 px-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white max-w-4xl mx-auto drop-shadow-lg leading-tight">
-            What is the <span className="text-red-600">Challenge</span>?
-          </h1>
-          <div className="h-[4px] w-40 my-5 mx-auto bg-gradient-to-l from-transparent to-white"></div>
-          <p className="text-lg md:text-xl text-gray-100 max-w-3xl mx-auto drop-shadow-md leading-relaxed">
-            At{" "}
-            <span className="font-semibold">
-              <span className="text-red-600">uGSOT</span>
+          <h1 className="text-4xl md:text-6xl font-semibold text-white max-w-7xl mx-auto drop-shadow-lg leading-tight">
+            What is the{" "}
+            <span className="text-red-600 font-extrabold">
+              DRIP Internship Challenge ?
             </span>
-            , we believe true engineering education begins by doing.  
-            A first-of-its-kind internship challenge that celebrates your
-            learning, creativity, and innovation. Designed for{" "}
-            <span className="font-semibold text-white">11th & 12th grade students</span>, 
-            the challenge includes engaging sessions led by industry experts,
-            where you’ll explore{" "}
-            <span className="font-semibold text-white">AI, Robotics, and more</span>.
+          </h1>
+          <div className="h-[4px] w-full max-w-5xl my-5 mx-auto bg-gradient-to-r from-transparent via-white to-transparent opacity-70"></div>
+          <p className="text-2xl md:text-2xl text-gray-100 max-w-6xl font-semibold mx-auto drop-shadow-md leading-relaxed">
+            A one-of-its-kind internship challenge built to spark your
+            creativity, innovation, and learning. Designed exclusively for <span className="text-red-600">Grade
+            11 & 12</span> students it brings you hands-on sessions with industry
+            experts where you'll dive into Al, social media, and beyond powered
+            by upGrad School of Technology.
           </p>
-          <button className="px-10 py-4 mt-8 text-lg font-semibold bg-white text-red-700 rounded-full shadow-lg hover:scale-110 transition duration-300">
-            Join the Challenge
-          </button>
+          
         </div>
       </section>
     </>

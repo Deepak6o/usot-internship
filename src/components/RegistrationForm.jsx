@@ -1,58 +1,145 @@
 "use client";
 
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React from "react";
 
 const RegistrationForm = () => {
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+  // List of 28 Indian states
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jammu and Kashmir",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+  ];
 
-  // Validation schema
-  const validationSchema = Yup.object({
-    name: Yup.string().min(2, "Name must be at least 2 characters").required("Name is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
-    phone: Yup.string().matches(/^[0-9]{10}$/, "Phone number must be 10 digits").required("Phone number is required"),
-    userType: Yup.string().oneOf(["student", "parent"], "Please select if you are a student or parent").required("Please select user type"),
-    completionYear: Yup.string().required("Please select year of completion"),
-    schoolName: Yup.string().min(2, "School name must be at least 2 characters").required("School name is required"),
-    referralCode: Yup.string(),
+  // Mock Formik-like functionality for the artifact environment
+  const [formData, setFormData] = React.useState({
+    name: "",
+    phone: "",
+    email: "",
+    schoolName: "",
+    standard: "",
+    state: "",
   });
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      userType: "",
-      completionYear: "",
-      schoolName: "",
-      referralCode: "",
-    },
-    validationSchema,
-    onSubmit: (values, { setSubmitting, resetForm }) => {
-      console.log("Form submitted:", values);
+  const [errors, setErrors] = React.useState({});
+  const [touched, setTouched] = React.useState({});
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  // Validation function
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return "Name is required";
+        if (value.length < 2) return "Name must be at least 2 characters";
+        return "";
+      case 'phone':
+        if (!value.trim()) return "Phone number is required";
+        if (!/^[0-9]{10}$/.test(value)) return "Phone number must be 10 digits";
+        return "";
+      case 'email':
+        if (!value.trim()) return "Email is required";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email address";
+        return "";
+      case 'schoolName':
+        if (!value.trim()) return "School name is required";
+        if (value.length < 2) return "School name must be at least 2 characters";
+        return "";
+      case 'standard':
+        if (!value) return "Please select your standard";
+        return "";
+      case 'state':
+        if (!value) return "Please select your state";
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Validate on change
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    
+    // Validate on blur
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Validate all fields
+    const newErrors = {};
+    const newTouched = {};
+    
+    Object.keys(formData).forEach(key => {
+      newTouched[key] = true;
+      const error = validateField(key, formData[key]);
+      if (error) newErrors[key] = error;
+    });
+    
+    setTouched(newTouched);
+    setErrors(newErrors);
+    
+    // If no errors, submit
+    if (Object.keys(newErrors).length === 0) {
+      setIsSubmitting(true);
+      console.log("Form submitted:", formData);
+      
       setTimeout(() => {
         alert("Registration submitted successfully!");
-        setSubmitting(false);
-        resetForm();
+        setIsSubmitting(false);
+        // Reset form
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          schoolName: "",
+          standard: "",
+          state: "",
+        });
+        setErrors({});
+        setTouched({});
       }, 1000);
-    },
-  });
+    }
+  };
 
   return (
-<div className="flex min-h-[80vh] items-center justify-center">
-      {/* Left Side - Image */}
-<div className="hidden lg:flex lg:w-1/3 items-center justify-center">
-        <img
-          src="/assets/reg.png"
-          alt="Education Platform"
-          className="object-cover w-full h-full rounded-l-xl"
-        />
-      </div>
-
-      {/* Right Side - Form */}
-      <div className="flex items-center justify-center w-full p-6 lg:w-1/2">
-        <div className="w-full max-w-lg">
+    <div className="flex min-h-[80vh] items-center justify-center">
+      <div className="flex items-center justify-center w-full ">
+        <div className="w-full max-w-xl">
           <div className="overflow-hidden bg-white shadow-lg rounded-xl">
             {/* Header */}
             <div className="px-6 py-6 text-center bg-gradient-to-r from-red-600 to-red-600">
@@ -62,8 +149,8 @@ const RegistrationForm = () => {
 
             {/* Form */}
             <div className="p-6">
-              <form onSubmit={formik.handleSubmit} className="space-y-4">
-                {/* Name Field */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Full Name Field */}
                 <div>
                   <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">
                     Full Name *
@@ -72,38 +159,16 @@ const RegistrationForm = () => {
                     type="text"
                     id="name"
                     name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    value={formData.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      formik.errors.name && formik.touched.name ? "border-red-300" : "border-gray-300"
+                      errors.name && touched.name ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter your full name"
                   />
-                  {formik.errors.name && formik.touched.name && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.name}</div>
-                  )}
-                </div>
-
-                {/* Email Field */}
-                <div>
-                  <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      formik.errors.email && formik.touched.email ? "border-red-300" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your email address"
-                  />
-                  {formik.errors.email && formik.touched.email && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.email}</div>
+                  {errors.name && touched.name && (
+                    <div className="mt-1 text-xs text-red-500">{errors.name}</div>
                   )}
                 </div>
 
@@ -116,75 +181,38 @@ const RegistrationForm = () => {
                     type="tel"
                     id="phone"
                     name="phone"
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    value={formData.phone}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      formik.errors.phone && formik.touched.phone ? "border-red-300" : "border-gray-300"
+                      errors.phone && touched.phone ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter 10-digit phone number"
                   />
-                  {formik.errors.phone && formik.touched.phone && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.phone}</div>
+                  {errors.phone && touched.phone && (
+                    <div className="mt-1 text-xs text-red-500">{errors.phone}</div>
                   )}
                 </div>
 
-                {/* User Type */}
+                {/* Email Field */}
                 <div>
-                  <label className="block mb-1 text-sm font-medium text-gray-700">You are a *</label>
-                  <div className="flex space-x-6">
-                    <label className="flex items-center cursor-pointer text-sm">
-                      <input
-                        type="radio"
-                        name="userType"
-                        value="student"
-                        checked={formik.values.userType === "student"}
-                        onChange={formik.handleChange}
-                        className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
-                      />
-                      <span className="ml-2">Student</span>
-                    </label>
-                    <label className="flex items-center cursor-pointer text-sm">
-                      <input
-                        type="radio"
-                        name="userType"
-                        value="parent"
-                        checked={formik.values.userType === "parent"}
-                        onChange={formik.handleChange}
-                        className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
-                      />
-                      <span className="ml-2">Parent</span>
-                    </label>
-                  </div>
-                  {formik.errors.userType && formik.touched.userType && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.userType}</div>
-                  )}
-                </div>
-
-                {/* Completion Year */}
-                <div>
-                  <label htmlFor="completionYear" className="block mb-1 text-sm font-medium text-gray-700">
-                    12th Year of Completion *
+                  <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">
+                    Email ID *
                   </label>
-                  <select
-                    id="completionYear"
-                    name="completionYear"
-                    value={formik.values.completionYear}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      formik.errors.completionYear && formik.touched.completionYear ? "border-red-300" : "border-gray-300"
+                      errors.email && touched.email ? "border-red-300" : "border-gray-300"
                     }`}
-                  >
-                    <option value="">Select year</option>
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  {formik.errors.completionYear && formik.touched.completionYear && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.completionYear}</div>
+                    placeholder="Enter your email address"
+                  />
+                  {errors.email && touched.email && (
+                    <div className="mt-1 text-xs text-red-500">{errors.email}</div>
                   )}
                 </div>
 
@@ -197,47 +225,91 @@ const RegistrationForm = () => {
                     type="text"
                     id="schoolName"
                     name="schoolName"
-                    value={formik.values.schoolName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    value={formData.schoolName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      formik.errors.schoolName && formik.touched.schoolName ? "border-red-300" : "border-gray-300"
+                      errors.schoolName && touched.schoolName ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter your school name"
                   />
-                  {formik.errors.schoolName && formik.touched.schoolName && (
-                    <div className="mt-1 text-xs text-red-500">{formik.errors.schoolName}</div>
+                  {errors.schoolName && touched.schoolName && (
+                    <div className="mt-1 text-xs text-red-500">{errors.schoolName}</div>
                   )}
                 </div>
 
-                {/* Referral Code */}
+                {/* Standard */}
                 <div>
-                  <label htmlFor="referralCode" className="block mb-1 text-sm font-medium text-gray-700">
-                    Referral Code <span className="text-gray-400">(Optional)</span>
+                  <label className="block mb-1 text-sm font-medium text-gray-700">Standard *</label>
+                  <div className="flex space-x-6">
+                    <label className="flex items-center cursor-pointer text-sm">
+                      <input
+                        type="radio"
+                        name="standard"
+                        value="11th"
+                        checked={formData.standard === "11th"}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                      />
+                      <span className="ml-2">11th</span>
+                    </label>
+                    <label className="flex items-center cursor-pointer text-sm">
+                      <input
+                        type="radio"
+                        name="standard"
+                        value="12th"
+                        checked={formData.standard === "12th"}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                      />
+                      <span className="ml-2">12th</span>
+                    </label>
+                  </div>
+                  {errors.standard && touched.standard && (
+                    <div className="mt-1 text-xs text-red-500">{errors.standard}</div>
+                  )}
+                </div>
+
+                {/* State */}
+                <div>
+                  <label htmlFor="state" className="block mb-1 text-sm font-medium text-gray-700">
+                    State *
                   </label>
-                  <input
-                    type="text"
-                    id="referralCode"
-                    name="referralCode"
-                    value={formik.values.referralCode}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Enter referral code"
-                  />
+                  <select
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                      errors.state && touched.state ? "border-red-300" : "border-gray-300"
+                    }`}
+                  >
+                    <option value="">Select your state</option>
+                    {indianStates.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.state && touched.state && (
+                    <div className="mt-1 text-xs text-red-500">{errors.state}</div>
+                  )}
                 </div>
 
                 {/* Submit */}
                 <button
                   type="submit"
-                  disabled={formik.isSubmitting}
+                  disabled={isSubmitting}
                   className={`w-full py-2.5 px-4 rounded-lg text-sm font-medium text-white transition-all duration-200 ${
-                    formik.isSubmitting
+                    isSubmitting
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-indigo-700 transform hover:scale-105 shadow-md hover:shadow-lg"
+                      : "bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 transform hover:scale-105 shadow-md hover:shadow-lg"
                   }`}
                 >
-                  {formik.isSubmitting ? (
+                  {isSubmitting ? (
                     <div className="flex items-center justify-center">
                       <div className="w-4 h-4 mr-2 border-b-2 border-white rounded-full animate-spin"></div>
                       Registering...

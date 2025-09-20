@@ -1,11 +1,16 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import RegistrationForm from "./RegistrationForm"; // Import your existing component
 
 const HeroSection = () => {
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
+  const heroSectionRef = useRef(null);
+  const registrationRef = useRef(null);
+  
+  const [isSticky, setIsSticky] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     let threeLoaded = false;
@@ -21,8 +26,15 @@ const HeroSection = () => {
         !vantaEffect.current
       ) {
         try {
+          // Ensure element has proper dimensions
+          const element = vantaRef.current;
+          if (element.offsetWidth === 0 || element.offsetHeight === 0) {
+            setTimeout(initVanta, 100);
+            return;
+          }
+
           vantaEffect.current = window.VANTA.RINGS({
-            el: vantaRef.current,
+            el: element,
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
@@ -35,6 +47,9 @@ const HeroSection = () => {
             color2: 0xff6b6b,
             size: 1.2,
             speed: 1.0,
+            // Additional stability options
+            forceAnimate: true,
+            THREE: window.THREE
           });
         } catch (error) {
           console.log("Vanta effect initialization failed:", error);
@@ -93,9 +108,17 @@ const HeroSection = () => {
       await loadThreeJS();
       await loadVantaRings();
 
-      // Small delay to ensure everything is loaded
+      // Wait for DOM to be fully ready and element to have dimensions
       setTimeout(() => {
-        initVanta();
+        if (vantaRef.current) {
+          const rect = vantaRef.current.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            initVanta();
+          } else {
+            // Retry if element doesn't have dimensions yet
+            setTimeout(initVanta, 200);
+          }
+        }
       }, 100);
     };
 
@@ -113,8 +136,38 @@ const HeroSection = () => {
     };
   }, []);
 
+  // Scroll handler for sticky registration form
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroSectionRef.current || !registrationRef.current) return;
+
+      const heroRect = heroSectionRef.current.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Check if hero section has been scrolled past
+      const shouldBeSticky = heroRect.bottom <= windowHeight * 0.8;
+      
+      // Check if we're near the bottom of the page
+      const isNearBottom = scrollY + windowHeight >= documentHeight - 200;
+      
+      setIsSticky(shouldBeSticky && !isNearBottom);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
+
   return (
-    <section className="relative  overflow-hidden">
+    <section 
+      ref={heroSectionRef}
+      className="relative overflow-hidden min-h-screen"
+    >
       {/* Vanta Background */}
       <div
         ref={vantaRef}
@@ -128,7 +181,7 @@ const HeroSection = () => {
         style={{ zIndex: 1 }}
       />
 
-      <div className="relative z-10 px-4 mx-auto  sm:px-10 lg:px-10">
+      <div className="relative z-10 px-4 mx-auto py-16 sm:px-10 lg:px-10">
         <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
           <div className="relative">
             {/* Content backdrop */}
@@ -216,12 +269,61 @@ const HeroSection = () => {
           </div>
 
           {/* Right side with your RegistrationForm component */}
-          <div className="relative animate-fade-in-right">
+          <div className={`relative animate-fade-in-right ${isSticky ? 'hidden' : ''}`}>
             <div className="relative z-10">
               <RegistrationForm />
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Sticky Registration Form */}
+      <div
+        ref={registrationRef}
+        className={`
+          fixed z-[100] transition-all duration-500 ease-in-out
+          ${isSticky ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-20px] pointer-events-none'}
+          ${isMinimized 
+            ? 'w-10 h-10 top-16 right-1 sm:top-4 sm:right-4 md:top-4 md:right-2 lg:right-1 xl:right-0' 
+            : 'top-16 right-1 sm:top-4 sm:right-4 md:top-4 md:right-2 lg:right-1 xl:right-0 w-[calc(100vw-0.5rem)] sm:w-[calc(100vw-2rem)] md:w-[420px] lg:w-[450px] xl:w-[500px]'
+          }
+        `}
+      >
+        {isMinimized ? (
+          // Minimized state - just a floating button
+          <button
+            onClick={toggleMinimize}
+            className="w-full h-full bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition-all duration-300 flex items-center justify-center group"
+          >
+            <svg 
+              className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        ) : (
+          // Expanded state - registration form with minimize button in header
+          <div className="scale-75 origin-top transform relative">
+            {/* Minimize button positioned in the form's "Register Now!" area */}
+            <button
+              onClick={toggleMinimize}
+              className="absolute top-4 right-6 z-10 w-6 h-6 bg-white hover:bg-gray-100 text-red-600 rounded-full flex items-center justify-center transition-colors shadow-md"
+            >
+              <svg 
+                className="w-3 h-3" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" />
+              </svg>
+            </button>
+            <RegistrationForm />
+          </div>
+        )}
       </div>
 
       {/* Custom CSS for animations */}
@@ -257,6 +359,29 @@ const HeroSection = () => {
           animation: fade-in-right 1s ease-out forwards;
           animation-delay: 0.3s;
           opacity: 0;
+        }
+
+        /* Custom scrollbar for the sticky form */
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 0px;
+          background: transparent;
+        }
+        
+        .overflow-y-auto {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: transparent;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: transparent;
         }
       `}</style>
     </section>

@@ -6,6 +6,7 @@ const HeroSection = () => {
   const vantaEffect = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [isFormScrolledPast, setIsFormScrolledPast] = useState(false);
 
   useEffect(() => {
     let threeLoaded = false;
@@ -131,11 +132,25 @@ const HeroSection = () => {
       if (shouldBeScrolled !== isScrolled) {
         setIsScrolled(shouldBeScrolled);
       }
+
+      // Check if main registration form is completely scrolled past
+      const formSection = document.querySelector(".registration-form-section");
+      if (formSection) {
+        const formRect = formSection.getBoundingClientRect();
+        const isFormCompletelyPast = formRect.bottom < 0;
+        
+        if (isFormCompletelyPast !== isFormScrolledPast) {
+          setIsFormScrolledPast(isFormCompletelyPast);
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
+    // Call once to set initial state
+    handleScroll();
+    
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isScrolled]);
+  }, [isScrolled, isFormScrolledPast]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -605,11 +620,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div
-              className={`relative  registration-form-section ${
-                isScrolled ? "lg:hidden" : ""
-              }`}
-            >
+            <div className="relative registration-form-section">
               <div className="relative z-10">
                 <RegistrationForm />
               </div>
@@ -618,19 +629,19 @@ const HeroSection = () => {
         </div>
       </section>
 
-      {/* Floating Mini Form - Desktop */}
+      {/* Floating Mini Form - Desktop (Only show when main form is completely scrolled past) */}
       <div
         className={`fixed top-4 right-4 z-50 transition-all duration-500 ease-in-out hidden md:block ${
-          isScrolled ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"
+          isFormScrolledPast ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"
         }`}
       >
         <MiniForm />
       </div>
 
-      {/* Sticky Registration Button - Mobile */}
+      {/* Sticky Registration Button - Mobile (Only show when main form is completely scrolled past) */}
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out md:hidden ${
-          isScrolled
+          isFormScrolledPast
             ? "opacity-100 visible translate-y-0"
             : "opacity-0 invisible translate-y-full"
         }`}

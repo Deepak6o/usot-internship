@@ -26,7 +26,7 @@ const Card3D = React.forwardRef((props, ref) => {
   const [hovered, setHovered] = useState(false);
 
   const finalGradient = useMemo(() => THEMES[theme], [theme]);
-  
+
   const patternId = useMemo(
     () => `pattern-${theme}-${title.replace(/\s+/g, "-").toLowerCase()}`,
     [theme, title]
@@ -51,7 +51,8 @@ const Card3D = React.forwardRef((props, ref) => {
     setMousePos({ x: 0, y: 0 });
   }, []);
 
-  const sizeClass = size === "sm" ? "h-64" : size === "lg" ? "h-96" : "h-80";
+  const sizeClass =
+    size === "sm" ? "h-64" : size === "lg" ? "h-96" : "h-80";
 
   return (
     <motion.div
@@ -84,7 +85,7 @@ const Card3D = React.forwardRef((props, ref) => {
       {/* Pattern overlay */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl opacity-20">
         <svg
-          className="absolute -top-4 -right-4 w-32 h-32 text-white/30"
+          className="absolute -top-4 -right-4 w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 text-white/30"
           viewBox="0 0 100 100"
         >
           <defs>
@@ -109,7 +110,7 @@ const Card3D = React.forwardRef((props, ref) => {
         </svg>
 
         <motion.div
-          className="absolute -bottom-4 -left-4 w-24 h-24 opacity-30"
+          className="absolute -bottom-4 -left-4 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 opacity-30"
           animate={{ rotate: hovered ? 180 : 0 }}
           transition={{ duration: 0.8 }}
         >
@@ -167,13 +168,13 @@ const Card3D = React.forwardRef((props, ref) => {
 
       {/* Content */}
       <motion.div
-        className="relative z-20 flex h-full flex-col justify-center items-center p-8 text-white text-center"
+        className="relative z-20 flex h-full flex-col justify-center items-center px-4 sm:px-6 md:px-8 py-6 text-white text-center"
         style={{ transform: "translateZ(20px)" }}
       >
         {/* Icon */}
         {iconSrc && (
           <motion.div
-            className="relative mb-6"
+            className="relative mb-4 sm:mb-6"
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
@@ -188,9 +189,9 @@ const Card3D = React.forwardRef((props, ref) => {
               <Image
                 src={iconSrc}
                 alt={title}
-                width={120}
-                height={120}
-                className="mx-auto opacity-90 filter brightness-0 invert"
+                width={80}
+                height={80}
+                className="sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px] mx-auto opacity-90 filter brightness-0 invert"
               />
             </motion.div>
           </motion.div>
@@ -198,12 +199,12 @@ const Card3D = React.forwardRef((props, ref) => {
 
         {/* Text Content */}
         <motion.div
-          className="space-y-4"
+          className="space-y-2 sm:space-y-3"
           animate={{ y: hovered ? -3 : 0 }}
           transition={{ duration: 0.3 }}
         >
           <motion.h3
-            className="text-xl font-bold tracking-tight drop-shadow-md leading-tight"
+            className="text-lg sm:text-xl font-bold tracking-tight drop-shadow-md leading-snug"
             animate={{ scale: hovered ? 1.02 : 1 }}
             transition={{ duration: 0.3 }}
           >
@@ -211,7 +212,7 @@ const Card3D = React.forwardRef((props, ref) => {
           </motion.h3>
 
           <motion.p
-            className="text-sm text-white/90 leading-relaxed drop-shadow-sm"
+            className="text-xs sm:text-sm md:text-base text-white/90 leading-relaxed drop-shadow-sm"
             animate={{ opacity: hovered ? 1 : 0.9 }}
             transition={{ duration: 0.3 }}
           >
@@ -253,14 +254,16 @@ export default function AfterInternship() {
     {
       id: "certificate",
       title: "Certificate of Completion",
-      description: "Certificate of Completion from upGrad School of Technology.",
+      description:
+        "Certificate of Completion from upGrad School of Technology.",
       iconSrc: "/assets/i1.png",
       theme: "primary",
     },
     {
       id: "recommendation",
-      title: "Letters of Recommendation", 
-      description: "Letters of Recommendation for top performers, signed by industry-embedded faculty.",
+      title: "Letters of Recommendation",
+      description:
+        "Letters of Recommendation for top performers, signed by industry-embedded faculty.",
       iconSrc: "/assets/i2.png",
       theme: "secondary",
     },
@@ -299,15 +302,11 @@ export default function AfterInternship() {
   };
 
   return (
-    <section className="py-16 bg-white relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02]">
-          <svg
-            width="100%"
-            height="100%"
-            className="text-gray-900"
-          >
+          <svg width="100%" height="100%" className="text-gray-900">
             <defs>
               <pattern
                 id="grid-after"
@@ -328,14 +327,11 @@ export default function AfterInternship() {
         </div>
 
         <motion.div
-          className="absolute top-10 right-10 w-64 h-64 opacity-[0.04]"
+          className="absolute top-10 right-10 w-40 h-40 sm:w-52 sm:h-52 lg:w-64 lg:h-64 opacity-[0.04]"
           animate={{ rotate: [0, 360], scale: [1, 1.05, 1] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
-          <svg
-            viewBox="0 0 200 200"
-            className="w-full h-full text-red-300"
-          >
+          <svg viewBox="0 0 200 200" className="w-full h-full text-red-300">
             <circle
               cx="100"
               cy="100"
@@ -356,19 +352,19 @@ export default function AfterInternship() {
         </motion.div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-10 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-red-600 mb-3 sm:mb-4">
             After the Internship
           </h2>
-          <p className="text-gray-700 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-gray-700 max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed px-2 sm:px-0">
             Your journey doesn't end when the program does. At uGSOT, we ensure
             your achievements are recognized and valued:
           </p>
@@ -376,7 +372,7 @@ export default function AfterInternship() {
 
         {/* Cards Grid */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

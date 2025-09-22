@@ -1,22 +1,16 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-import RegistrationForm from "./RegistrationForm"; // Import your existing component
-
 const HeroSection = () => {
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
-  const heroSectionRef = useRef(null);
-  const registrationRef = useRef(null);
-  
-  const [isSticky, setIsSticky] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     let threeLoaded = false;
     let vantaLoaded = false;
 
-    // Function to initialize Vanta effect
     const initVanta = () => {
       if (
         threeLoaded &&
@@ -26,7 +20,6 @@ const HeroSection = () => {
         !vantaEffect.current
       ) {
         try {
-          // Ensure element has proper dimensions
           const element = vantaRef.current;
           if (element.offsetWidth === 0 || element.offsetHeight === 0) {
             setTimeout(initVanta, 100);
@@ -47,9 +40,8 @@ const HeroSection = () => {
             color2: 0xff6b6b,
             size: 1.2,
             speed: 1.0,
-            // Additional stability options
             forceAnimate: true,
-            THREE: window.THREE
+            THREE: window.THREE,
           });
         } catch (error) {
           console.log("Vanta effect initialization failed:", error);
@@ -57,14 +49,13 @@ const HeroSection = () => {
       }
     };
 
-    // Load Three.js
     const loadThreeJS = () => {
       return new Promise((resolve) => {
         if (window.THREE) {
+          threeLoaded = true;
           resolve();
           return;
         }
-
         const script = document.createElement("script");
         script.src =
           "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
@@ -74,16 +65,16 @@ const HeroSection = () => {
         };
         script.onerror = () => {
           console.error("Failed to load Three.js");
-          resolve(); // Don't block the component
+          resolve();
         };
         document.head.appendChild(script);
       });
     };
 
-    // Load Vanta.js Rings
     const loadVantaRings = () => {
       return new Promise((resolve) => {
         if (window.VANTA && window.VANTA.RINGS) {
+          vantaLoaded = true;
           resolve();
           return;
         }
@@ -97,25 +88,22 @@ const HeroSection = () => {
         };
         script.onerror = () => {
           console.error("Failed to load Vanta Rings");
-          resolve(); // Don't block the component
+          resolve();
         };
         document.head.appendChild(script);
       });
     };
 
-    // Load scripts sequentially
     const loadScripts = async () => {
       await loadThreeJS();
       await loadVantaRings();
 
-      // Wait for DOM to be fully ready and element to have dimensions
       setTimeout(() => {
         if (vantaRef.current) {
           const rect = vantaRef.current.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
             initVanta();
           } else {
-            // Retry if element doesn't have dimensions yet
             setTimeout(initVanta, 200);
           }
         }
@@ -124,7 +112,6 @@ const HeroSection = () => {
 
     loadScripts();
 
-    // Cleanup function
     return () => {
       if (vantaEffect.current) {
         try {
@@ -136,197 +123,569 @@ const HeroSection = () => {
     };
   }, []);
 
-  // Scroll handler for sticky registration form
   useEffect(() => {
     const handleScroll = () => {
-      if (!heroSectionRef.current || !registrationRef.current) return;
+      const scrollPosition = window.scrollY;
+      const shouldBeScrolled = scrollPosition > 300;
 
-      const heroRect = heroSectionRef.current.getBoundingClientRect();
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      
-      // Check if hero section has been scrolled past
-      const shouldBeSticky = heroRect.bottom <= windowHeight * 0.8;
-      
-      // Check if we're near the bottom of the page
-      const isNearBottom = scrollY + windowHeight >= documentHeight - 200;
-      
-      setIsSticky(shouldBeSticky && !isNearBottom);
+      if (shouldBeScrolled !== isScrolled) {
+        setIsScrolled(shouldBeScrolled);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isScrolled]);
 
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
-  return (
-    <section 
-      ref={heroSectionRef}
-      className="relative overflow-hidden min-h-screen"
-    >
-      {/* Vanta Background */}
-      <div
-        ref={vantaRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ zIndex: 0 }}
-      />
+  const scrollToForm = () => {
+    const formSection = document.querySelector(".registration-form-section");
+    if (formSection) {
+      formSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    } else {
+      window.scrollTo({
+        top: window.innerHeight * 0.6,
+        behavior: "smooth",
+      });
+    }
+  };
 
-      {/* Overlay for better text readability */}
-      <div
-        className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"
-        style={{ zIndex: 1 }}
-      />
+  const openPopup = () => {
+    setShowPopup(true);
+    document.body.style.overflow = 'hidden';
+  };
 
-      <div className="relative z-10 px-4 mx-auto py-16 sm:px-10 lg:px-10">
-        <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
-          <div className="relative">
-            {/* Content backdrop */}
-            <div className="absolute inset-0 transform bg-white bg-opacity-40 blur-3xl rounded-3xl -rotate-1"></div>
+  const closePopup = () => {
+    setShowPopup(false);
+    document.body.style.overflow = 'unset';
+  };
 
-            <div className="relative z-10 p-8">
-              {/* Fixed Main Heading */}
-              <h1 className="mt-4 text-5xl font-bold leading-tight text-black lg:mt-6 sm:text-5xl xl:text-6xl animate-fade-in-up">
-                IGNITE <br />
-                <span className="text-transparent bg-clip-text bg-red-600 animate-pulse">
-                  Internship Challenge <br />
-                </span>{" "}
-                by ugSOT
-              </h1>
+  // Registration Form Component
+  const RegistrationForm = () => {
+    const [formData, setFormData] = useState({
+      name: "",
+      phone: "",
+      email: "",
+      schoolName: "",
+      standard: "",
+      city: "",
+    });
 
-              {/* Subtitle Line */}
-              <p className="mt-2 text-lg font-medium text-gray-700 sm:text-2xl animate-fade-in-up">
-                relate it with the tech and non-tech
-              </p>
+    const [errors, setErrors] = useState({});
+    const [touched, setTouched] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-              {/* Short description */}
-              <p
-                className="mt-4 text-base text-black lg:mt-6 sm:text-xl animate-fade-in-up"
-                style={{ animationDelay: "0.2s" }}
-              >
-                Dive into hands-on innovation with{" "}
-                <span className="font-semibold text-red-600">uGSOT</span>,
-                designed for Grade 11 & Grade 12 students.
-              </p>
+    const validateField = (name, value) => {
+      switch (name) {
+        case "name":
+          if (!value.trim()) return "Name is required";
+          if (value.length < 2) return "Name must be at least 2 characters";
+          return "";
+        case "phone":
+          if (!value.trim()) return "Phone number is required";
+          if (!/^[0-9]{10}$/.test(value)) return "Phone number must be 10 digits";
+          return "";
+        case "email":
+          if (!value.trim()) return "Email is required";
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+            return "Invalid email address";
+          return "";
+        case "schoolName":
+          if (!value.trim()) return "School name is required";
+          if (value.length < 2) return "School name must be at least 2 characters";
+          return "";
+        case "standard":
+          if (!value) return "Please select your standard";
+          return "";
+        case "city":
+          if (!value.trim()) return "City name is required";
+          return "";
+        default:
+          return "";
+      }
+    };
 
-              {/* Dates and Format */}
-              <div
-                className="mt-6 text-black space-y-2 sm:text-lg animate-fade-in-up"
-                style={{ animationDelay: "0.3s" }}
-              >
-                <p>
-                  <span className="font-semibold text-red-600">Starts:</span>{" "}
-                  [Insert Date & Time]
-                </p>
-                <p>
-                  <span className="font-semibold text-red-600">Ends:</span>{" "}
-                  [Insert Date & Time]
-                </p>
-                <p>
-                  <span className="font-semibold text-red-600">Mode:</span>{" "}
-                  Online
-                </p>
-              </div>
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      const error = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    };
 
-              <div className="flex flex-col items-start">
-                {/* Eligibility */}
-                <p
-                  className="mt-6 text-sm font-medium text-gray-700 bg-gray-100 px-4 py-2 rounded-full inline-block animate-fade-in-up"
-                  style={{ animationDelay: "0.4s" }}
-                >
-                  Open to students of Grades 11th & 12th Standard
-                </p>
+    const handleBlur = (e) => {
+      const { name, value } = e.target;
+      setTouched((prev) => ({ ...prev, [name]: true }));
+      const error = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    };
 
-                {/* CTA */}
-                <a
-                  href="/"
-                  title=""
-                  className="inline-flex items-center px-8 py-4 mt-8 font-semibold text-white transition-all duration-300 transform rounded-full shadow-lg bg-red-600 lg:mt-12 hover:from-red-600 hover:to-orange-600 focus:from-red-600 focus:to-orange-600 hover:scale-105 hover:shadow-xl animate-fade-in-up"
-                  role="button"
-                  style={{ animationDelay: "0.5s" }}
-                >
-                  Apply Now
-                  <svg
-                    className="w-6 h-6 ml-8 -mr-2 transition-transform duration-300 group-hover:translate-x-1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
+    const handleSubmit = () => {
+      const newErrors = {};
+      const newTouched = {};
+      Object.keys(formData).forEach((key) => {
+        newTouched[key] = true;
+        const error = validateField(key, formData[key]);
+        if (error) newErrors[key] = error;
+      });
+
+      setTouched(newTouched);
+      setErrors(newErrors);
+
+      if (Object.keys(newErrors).length === 0) {
+        setIsSubmitting(true);
+        console.log("Form submitted:", formData);
+        setTimeout(() => {
+          alert("Registration submitted successfully!");
+          setIsSubmitting(false);
+          setFormData({
+            name: "",
+            phone: "",
+            email: "",
+            schoolName: "",
+            standard: "",
+            city: "",
+          });
+          setErrors({});
+          setTouched({});
+          closePopup();
+        }, 1000);
+      }
+    };
+
+    return (
+      <div className="w-full max-w-lg">
+        <div className="overflow-hidden bg-white shadow-lg rounded-xl">
+          <div className="px-4 py-4 text-center bg-gradient-to-r from-red-600 to-red-600">
+            <h1 className="mb-1 text-lg sm:text-xl font-bold text-white">
+              Register Now !
+            </h1>
+            <p className="text-xs sm:text-sm text-red-100">
+              4664 people registered
+            </p>
           </div>
 
-          {/* Right side with your RegistrationForm component */}
-          <div className={`relative animate-fade-in-right ${isSticky ? 'hidden' : ''}`}>
-            <div className="relative z-10">
-              <RegistrationForm />
+          <div className="p-4 sm:p-6">
+            <div className="space-y-3 sm:space-y-4">
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter your full name"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.name && touched.name ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.name && touched.name && (
+                  <div className="mt-1 text-xs text-red-500">{errors.name}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter 10-digit phone number"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.phone && touched.phone ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.phone && touched.phone && (
+                  <div className="mt-1 text-xs text-red-500">{errors.phone}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Email ID *
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter your email address"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.email && touched.email ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.email && touched.email && (
+                  <div className="mt-1 text-xs text-red-500">{errors.email}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  School Name *
+                </label>
+                <input
+                  type="text"
+                  name="schoolName"
+                  value={formData.schoolName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter your school name"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.schoolName && touched.schoolName ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.schoolName && touched.schoolName && (
+                  <div className="mt-1 text-xs text-red-500">{errors.schoolName}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Standard *
+                </label>
+                <div className="flex sm:flex-row sm:space-x-4 space-y-1 sm:space-y-0">
+                  <label className="flex items-center cursor-pointer text-sm sm:text-base">
+                    <input
+                      type="radio"
+                      name="standard"
+                      value="11th"
+                      checked={formData.standard === "11th"}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                    />
+                    <span className="ml-2">11th</span>
+                  </label>
+                  <label className="flex ml-10 items-center cursor-pointer text-sm sm:text-base">
+                    <input
+                      type="radio"
+                      name="standard"
+                      value="12th"
+                      checked={formData.standard === "12th"}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                    />
+                    <span className="ml-2">12th</span>
+                  </label>
+                </div>
+                {errors.standard && touched.standard && (
+                  <div className="mt-1 text-xs text-red-500">{errors.standard}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  City *
+                </label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter your city name"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.city && touched.city ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.city && touched.city && (
+                  <div className="mt-1 text-xs text-red-500">{errors.city}</div>
+                )}
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`w-full py-2 px-4 rounded-lg text-sm sm:text-base font-medium text-white transition-all duration-200 ${
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 transform hover:scale-105 shadow-md hover:shadow-lg"
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 mr-2 border-b-2 border-white rounded-full animate-spin"></div>
+                    Registering...
+                  </div>
+                ) : (
+                  "Register Now"
+                )}
+              </button>
             </div>
           </div>
         </div>
       </div>
+    );
+  };
 
-      {/* Sticky Registration Form */}
-      <div
-        ref={registrationRef}
-        className={`
-          fixed z-[100] transition-all duration-500 ease-in-out
-          ${isSticky ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-20px] pointer-events-none'}
-          ${isMinimized 
-            ? 'w-10 h-10 top-16 right-1 sm:top-4 sm:right-4 md:top-4 md:right-2 lg:right-1 xl:right-0' 
-            : 'top-16 right-1 sm:top-4 sm:right-4 md:top-4 md:right-2 lg:right-1 xl:right-0 w-[calc(100vw-0.5rem)] sm:w-[calc(100vw-2rem)] md:w-[420px] lg:w-[450px] xl:w-[500px]'
-          }
-        `}
+  // Mini Form Component for floating widget
+  const MiniForm = () => {
+    const [miniFormData, setMiniFormData] = useState({
+      name: "",
+      phone: "",
+      email: ""
+    });
+
+    const handleMiniSubmit = () => {
+      if (miniFormData.name && miniFormData.phone && miniFormData.email) {
+        openPopup();
+      }
+    };
+
+    const handleMiniChange = (e) => {
+      const { name, value } = e.target;
+      setMiniFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    return (
+      <div 
+        className="bg-white rounded-xl shadow-2xl p-3 w-72 border border-gray-100 cursor-pointer"
+        onClick={openPopup}
       >
-        {isMinimized ? (
-          // Minimized state - just a floating button
+        <div className="text-center mb-2">
+          <h3 className="text-sm font-bold text-gray-800">Quick Register</h3>
+          <p className="text-xs text-gray-600">Fill to complete registration</p>
+        </div>
+        
+        <div className="space-y-2">
+          <input
+            type="text"
+            name="name"
+            value={miniFormData.name}
+            onChange={handleMiniChange}
+            placeholder="Name"
+            className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 cursor-pointer"
+            readOnly
+          />
+          <input
+            type="tel"
+            name="phone"
+            value={miniFormData.phone}
+            onChange={handleMiniChange}
+            placeholder="Phone"
+            className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 cursor-pointer"
+            readOnly
+          />
+          <input
+            type="email"
+            name="email"
+            value={miniFormData.email}
+            onChange={handleMiniChange}
+            placeholder="Email"
+            className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 cursor-pointer"
+            readOnly
+          />
           <button
-            onClick={toggleMinimize}
-            className="w-full h-full bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition-all duration-300 flex items-center justify-center group"
+            onClick={(e) => {
+              e.stopPropagation();
+              openPopup();
+            }}
+            className="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2 px-3 rounded-md transition-all duration-300 transform hover:scale-105"
           >
-            <svg 
-              className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            Complete Registration →
           </button>
-        ) : (
-          // Expanded state - registration form with minimize button in header
-          <div className="scale-75 origin-top transform relative">
-            {/* Minimize button positioned in the form's "Register Now!" area */}
-            <button
-              onClick={toggleMinimize}
-              className="absolute top-4 right-6 z-10 w-6 h-6 bg-white hover:bg-gray-100 text-red-600 rounded-full flex items-center justify-center transition-colors shadow-md"
-            >
-              <svg 
-                className="w-3 h-3" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" />
-              </svg>
-            </button>
-            <RegistrationForm />
+        </div>
+        
+        <div className="flex items-center justify-center mt-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center text-xs text-gray-500">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
+            <span>4664 registered</span>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <section className="relative overflow-hidden min-h-screen">
+        <div
+          ref={vantaRef}
+          className="absolute inset-0 w-full h-full"
+          style={{ zIndex: 0 }}
+        />
+
+        <div
+          className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"
+          style={{ zIndex: 1 }}
+        />
+
+        <div className="relative z-10 px-4 mx-auto py-10 sm:px-6 md:px-8 lg:px-10 xl:px-16">
+          <div className="grid items-center grid-cols-1 gap-8 lg:gap-12 lg:grid-cols-2">
+            <div className="relative">
+              <div className="absolute inset-0 transform bg-white bg-opacity-40 blur-3xl rounded-3xl -rotate-1"></div>
+
+              <div className="relative z-10 p-4 sm:p-6 lg:p-8">
+                <h1 className="mt-2 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-tight text-black animate-fade-in-up">
+                  IGNITE <br />
+                  <span className="text-transparent bg-clip-text bg-red-600 animate-pulse">
+                    Internship Challenge <br />
+                  </span>{" "}
+                  by ugSOT
+                </h1>
+
+                <p className="mt-3 text-base sm:text-lg md:text-xl font-medium text-gray-700 animate-fade-in-up">
+                  relate it with the tech and non-tech
+                </p>
+
+                <p
+                  className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl text-black animate-fade-in-up"
+                  style={{ animationDelay: "0.2s" }}
+                >
+                  Dive into hands-on innovation with{" "}
+                  <span className="font-semibold text-red-600">uGSOT</span>,
+                  designed for Grade 11 & Grade 12 students.
+                </p>
+
+                <div
+                  className="mt-6 text-sm sm:text-base md:text-lg text-black space-y-2 animate-fade-in-up"
+                  style={{ animationDelay: "0.3s" }}
+                >
+                  <p>
+                    <span className="font-semibold text-red-600">Starts:</span>{" "}
+                    [Insert Date & Time]
+                  </p>
+                  <p>
+                    <span className="font-semibold text-red-600">Ends:</span>{" "}
+                    [Insert Date & Time]
+                  </p>
+                  <p>
+                    <span className="font-semibold text-red-600">Mode:</span>{" "}
+                    Online
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-start">
+                  <p
+                    className="mt-6 text-xs sm:text-sm md:text-base font-medium text-gray-700 bg-gray-100 px-4 py-2 rounded-full inline-block animate-fade-in-up"
+                    style={{ animationDelay: "0.4s" }}
+                  >
+                    Open to students of Grades 11th & 12th Standard
+                  </p>
+
+                  <button
+                    onClick={openPopup}
+                    className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 mt-6 md:mt-8 font-semibold text-white transition-all duration-300 transform rounded-full shadow-lg bg-red-600 hover:from-red-600 hover:to-orange-600 focus:from-red-600 focus:to-orange-600 hover:scale-105 hover:shadow-xl animate-fade-in-up"
+                    style={{ animationDelay: "0.5s" }}
+                  >
+                    Apply Now
+                    <svg
+                      className="w-5 h-5 sm:w-6 sm:h-6 ml-4 sm:ml-8 -mr-2 transition-transform duration-300 group-hover:translate-x-1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`relative  registration-form-section ${
+                isScrolled ? "lg:hidden" : ""
+              }`}
+            >
+              <div className="relative z-10">
+                <RegistrationForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating Mini Form - Desktop */}
+      <div
+        className={`fixed top-4 right-4 z-50 transition-all duration-500 ease-in-out hidden md:block ${
+          isScrolled ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"
+        }`}
+      >
+        <MiniForm />
       </div>
 
-      {/* Custom CSS for animations */}
+      {/* Sticky Registration Button - Mobile */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out md:hidden ${
+          isScrolled
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible translate-y-full"
+        }`}
+      >
+        <div className="bg-white border-t border-gray-200 shadow-2xl px-1 py-1">
+          <button
+            onClick={scrollToForm}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 group"
+          >
+            <svg
+              className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:-translate-y-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            <span className="text-sm sm:text-lg font-bold">Register Now</span>
+            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+          </button>
+        </div>
+      </div>
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closePopup}
+          ></div>
+          
+          <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="relative">
+              <button
+                onClick={closePopup}
+                className="absolute -top-2 -right-2 z-20 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              <div className="transform animate-scale-in">
+                <RegistrationForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         @keyframes fade-in-up {
           from {
@@ -350,6 +709,17 @@ const HeroSection = () => {
           }
         }
 
+        @keyframes scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
           opacity: 0;
@@ -361,30 +731,11 @@ const HeroSection = () => {
           opacity: 0;
         }
 
-        /* Custom scrollbar for the sticky form */
-        .overflow-y-auto::-webkit-scrollbar {
-          width: 0px;
-          background: transparent;
-        }
-        
-        .overflow-y-auto {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        
-        .overflow-y-auto::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        
-        .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: transparent;
-        }
-        
-        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: transparent;
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out forwards;
         }
       `}</style>
-    </section>
+    </>
   );
 };
 

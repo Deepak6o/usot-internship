@@ -7,30 +7,21 @@ import Session from "@/components/Session";
 import Footer from "@/components/Footer";
 import AfterInternship from "@/components/AfterInternship";
 import WhyAttend from "@/components/WhyAttend";
+import AdmissionProcess from "@/components/AdmissionProcess";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <div id="hero">
-        <HeroSection />
-      </div>
-      <div id="introduction">
-        <Introduction />
-      </div>
-      <div id="reward">
-        <Reward />
-      </div>
-      <div id="why-attend">
-        <WhyAttend />
-      </div>
-      <div id="after-internship">
-        <AfterInternship />
-      </div>
-      <div id="session">
-        <Session />
-      </div>
-      <Footer />
+      <HeroSection />
+      <Introduction />
+
+      <Reward />
+      <AfterInternship />
+      <Session />
+      <WhyAttend />
+
+      {/* <Footer /> */}
     </>
   );
 }

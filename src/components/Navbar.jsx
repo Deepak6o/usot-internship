@@ -32,7 +32,7 @@ export default function DalimNavbar() {
 
   return (
     <div className="sticky top-0 z-50">
-      <nav className="sticky top-0 z-50 border-b shadow-lg bg-white/70 backdrop-blur-xl border-white/20 shadow-black/5">
+      <nav className="sticky top-0 z-50  bg-white">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -49,7 +49,7 @@ export default function DalimNavbar() {
             </div>
 
             {/* Navigation Links */}
-            <div className="hidden md:block">
+            {/* <div className="hidden md:block">
               <div className="flex items-baseline ml-10 space-x-8">
                 <button 
                   onClick={() => smoothScrollTo('hero')}
@@ -87,10 +87,10 @@ export default function DalimNavbar() {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Mobile menu button */}
-            <div className="md:hidden">
+            {/* <div className="md:hidden">
               <button
                 type="button"
                 className="text-gray-600 hover:text-black focus:outline-none focus:text-black transition-colors duration-200"
@@ -105,7 +105,7 @@ export default function DalimNavbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Mobile menu */}

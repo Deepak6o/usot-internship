@@ -1,42 +1,16 @@
 "use client";
 
 import React from "react";
-import { FaBullseye, FaMedal, FaStar } from "react-icons/fa";
 
 const RewardCard = ({ icon, title, description }) => (
   <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 flex flex-col items-center text-center">
-    <div className="flex items-center justify-center w-25 h-25 bg-red-100 rounded-full mb-4">
-      {icon} {/* Icon is rendered here */}
+    <div className="flex items-center justify-center w-24 h-24 bg-red-100 rounded-full mb-4">
+      {icon} {/* Icon or Image */}
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-    <p className="text-gray-600 leading-relaxed">{description}</p>
-  </div>
-);
-
-const PrizeItem = ({ image, title, subtitle, alt }) => (
-  <div className="group cursor-pointer">
-    <div className="relative overflow-hidden rounded-xl bg-gray-50 aspect-square mb-4">
-      <img
-        src={image}
-        alt={alt}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        onError={(e) => {
-          // Fallback to a colored div with icon if image fails
-          e.target.style.display = "none";
-          e.target.nextSibling.style.display = "flex";
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 text-white text-4xl hidden items-center justify-center">
-        {getIconForTitle(title)}
-      </div>
-      <div className="absolute inset-0 bg-red-600 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
-    </div>
-    <div className="text-center">
-      <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-1">
-        {title}
-      </h4>
-      <p className="text-xs text-gray-500">{subtitle}</p>
-    </div>
+    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">{title}</h3>
+    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+      {description}
+    </p>
   </div>
 );
 
@@ -46,53 +20,53 @@ const Reward = () => {
       icon: (
         <img
           src="/assets/rw1.png"
-          alt="Bullseye Icon"
-          className="w-24 h-24 object-contain"
+          alt="Learning Rewards"
+          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
         />
       ),
-      title: "Learning Rewards",
+      title: "Excellency Rewards",
       description:
-        "After every session, you'll participate in an activity or quiz. Top performers win exciting prizes like gadgets, vouchers, and official uGSOT merchandise.",
+        "After every session, you’ll take part in an activity or quiz. Top performers from each round will be recognized as uGSOT Star Learners and win exciting prizes like smart watches, Xbox top brands vouchers, and official merchandise.",
     },
     {
       icon: (
         <img
           src="/assets/rw2.png"
-          alt="Bullseye Icon"
-          className="w-24 h-24 object-contain"
+          alt="Consistency Rewards"
+          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
         />
       ),
       title: "Consistency Rewards",
       description:
-        "Students who attend all sessions and actively contribute will be recognized as uGSOT Star Learners and get exclusive certificates.",
+        "Showing up matters. Students who attend all sessions and actively participate will earn the Certificate of Active Engagement, a special recognition of consistency, discipline, and commitment that will stand out on any profile.",
     },
     {
       icon: (
         <img
           src="/assets/rw3.png"
-          alt="Bullseye Icon"
-          className="w-24 h-24 object-contain"
+          alt="Creator's Reward"
+          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
         />
       ),
       title: "Creator's Reward",
       description:
-        "Love making content? Create a reel, vlog, or short video about your uGSOT journey. The best videos with strong reach and creativity will win the uGSOT Creator's Award, with special prizes and a feature on our official channels.",
+        "Love making content? Here’s your chance! Create a reel, vlog, or short video about your uGSOT internship journey. If your video gains strong reach and creativity points, top 3 winners can claim the uGSOT Creator’s Award with exclusive prizes like  smart watches, headphones, top brands vouchers and a feature on our official channel.",
     },
   ];
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section className="py-16 sm:py-20 lg:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header Section */}
-        <header className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl sm:text-4xl lg:text-4xl font-extrabold text-red-600 mb-4">
-            Here's how rewards work at uGSOT:
+        <header className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-red-600 mb-4">
+            Here’s how rewards work at IGNITE Challenge:
           </h2>
         </header>
 
         {/* Reward Types Section */}
-        <div className="mb-20">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-16">
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
             {rewardTypes.map((reward, index) => (
               <RewardCard
                 key={index}
@@ -106,91 +80,52 @@ const Reward = () => {
 
         {/* Prizes Showcase Section */}
         <div>
-          <div className="text-center mb-12">
-            <h3 className="text-4xl sm:text-4xl font-bold text-red-600 mb-4">
+          <div className="text-center mb-10 sm:mb-12">
+            <h3 className="text-3xl sm:text-4xl font-bold text-red-600 mb-4">
               Rewards and Recognition
             </h3>
-            <p className="text-2xl font-bold text-black leading-relaxed">
+            <p className="text-lg sm:text-xl font-bold text-black leading-relaxed">
               During the Internship
             </p>
-            <p className="text-xl font-medium text-gray-700 leading-relaxed">
+            <p className="text-base sm:text-lg font-medium text-gray-700 leading-relaxed">
               Perform well, and you unlock exciting rewards along the way:
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 mt-10 lg:mt-16 lg:gap-10 lg:grid-cols-4 ">
-            <div className="relative group ">
-              <div className="overflow-hidden aspect-w-1 aspect-h-1">
-                <img
-                  className="object-cover w-full h-full transition-all duration-300 group-hover:scale-125"
-                  src="/assets/r1.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="flex items-start justify-between mt-4 space-x-4">
-                <div className="w-full text-center">
-                  <h3 className="text-xs font-bold text-gray-900 sm:text-sm md:text-base">
-                    Tech gadgets to fuel your curiosity
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 lg:gap-10 mt-8 sm:mt-10 lg:mt-16 lg:grid-cols-4">
+            {[
+              {
+                img: "/assets/r1.jpg",
+                text: "Tech gadgets to fuel your curiosity",
+              },
+              {
+                img: "/assets/r2.jpg",
+                text: "Official uGSOT merchandise designed for young innovators",
+              },
+              {
+                img: "/assets/r3.jpg",
+                text: "Smart accessories like fitness bands and headphones",
+              },
+              {
+                img: "/assets/r4.jpg",
+                text: "Gift vouchers from leading brands",
+              },
+            ].map((prize, idx) => (
+              <div key={idx} className="relative group">
+                <div className="overflow-hidden aspect-square rounded-xl">
+                  <img
+                    className="object-cover w-full h-full transition-all duration-300 group-hover:scale-110"
+                    src={prize.img}
+                    alt={`Prize ${idx + 1}`}
+                  />
+                </div>
+                <div className="mt-3 sm:mt-4 text-center">
+                  <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
+                    {prize.text}
                   </h3>
                 </div>
               </div>
-            </div>
-
-            <div className="relative group">
-              <div className="overflow-hidden aspect-w-1 aspect-h-1">
-                <img
-                  className="object-cover w-full h-full transition-all duration-300 group-hover:scale-125"
-                  src="/assets/r2.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="flex items-start justify-between mt-4 space-x-4">
-                <div className="w-full text-center">
-                  <h3 className="text-xs font-bold text-gray-900 sm:text-sm md:text-base">
-                    Official uGSOT merchandise designed for young innovators
-                    <span
-                      className="absolute inset-0"
-                      aria-hidden="true"
-                    ></span>
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative group">
-              <div className="overflow-hidden aspect-w-1 aspect-h-1">
-                <img
-                  className="object-cover w-full h-full transition-all duration-300 group-hover:scale-125"
-                  src="/assets/r3.jpg"
-                  alt=""
-                />
-              </div>
-
-              <div className="flex items-start justify-between mt-4 space-x-4">
-                <div className="w-full text-center">
-                  <h3 className="text-xs font-bold text-gray-900 sm:text-sm md:text-base">
-                    Smart accessories like fitness bands and headphones
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative group">
-              <div className="overflow-hidden aspect-w-1 aspect-h-1">
-                <img
-                  className="object-cover w-full h-full transition-all duration-300 group-hover:scale-125"
-                  src="assets/r4.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="flex items-start justify-between mt-4 space-x-4">
-                <div className="w-full text-center">
-                  <h3 className="text-xs font-bold text-gray-900 sm:text-sm md:text-base">
-                    Gift vouchers from leading brands
-                  </h3>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

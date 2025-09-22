@@ -16,8 +16,8 @@ const WhyAttendHero = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
+
+    const ctx = canvas.getContext("2d");
     let animationFrameId;
     let particles = [];
     const mouse = { x: null, y: null, radius: 150 };
@@ -69,16 +69,16 @@ const WhyAttendHero = () => {
 
     function init() {
       particles = [];
-      // Increased particle density from 12000 to 6000 (doubled the density)
       let numberOfParticles = (canvas.height * canvas.width) / 6000;
       for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 2) + 0.5;
-        let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
-        let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
-        let directionX = (Math.random() * 0.3) - 0.15;
-        let directionY = (Math.random() * 0.3) - 0.15;
-        // Slightly increased opacity for better visibility
-        let color = 'rgba(239, 68, 68, 0.4)'; // Red particles with moderate opacity
+        let size = Math.random() * 2 + 0.5;
+        let x =
+          Math.random() * (canvas.width - size * 2 - size * 2) + size * 2;
+        let y =
+          Math.random() * (canvas.height - size * 2 - size * 2) + size * 2;
+        let directionX = Math.random() * 0.3 - 0.15;
+        let directionY = Math.random() * 0.3 - 0.15;
+        let color = "rgba(239, 68, 68, 0.4)";
         particles.push(new Particle(x, y, directionX, directionY, size, color));
       }
     }
@@ -86,35 +86,37 @@ const WhyAttendHero = () => {
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      init(); 
+      init();
     };
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
     const connect = () => {
       let opacityValue = 1;
       for (let a = 0; a < particles.length; a++) {
         for (let b = a; b < particles.length; b++) {
-          let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
-            + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
-          
+          let distance =
+            (particles[a].x - particles[b].x) *
+              (particles[a].x - particles[b].x) +
+            (particles[a].y - particles[b].y) *
+              (particles[a].y - particles[b].y);
+
           if (distance < (canvas.width / 8) * (canvas.height / 8)) {
-            opacityValue = 1 - (distance / 25000);
-            
+            opacityValue = 1 - distance / 25000;
+
             let dx_mouse_a = particles[a].x - mouse.x;
             let dy_mouse_a = particles[a].y - mouse.y;
-            let distance_mouse_a = Math.sqrt(dx_mouse_a * dx_mouse_a + dy_mouse_a * dy_mouse_a);
+            let distance_mouse_a = Math.sqrt(
+              dx_mouse_a * dx_mouse_a + dy_mouse_a * dy_mouse_a
+            );
 
             if (mouse.x && distance_mouse_a < mouse.radius) {
-              // Increased mouse interaction opacity while keeping it controlled
               ctx.strokeStyle = `rgba(239, 68, 68, ${opacityValue * 0.7})`;
             } else {
-              // Slightly more visible connection lines
               ctx.strokeStyle = `rgba(185, 28, 28, ${opacityValue * 0.45})`;
             }
-            
-            // Slightly thicker lines for better visibility
+
             ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(particles[a].x, particles[a].y);
@@ -127,11 +129,10 @@ const WhyAttendHero = () => {
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      // Create gradient background
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, '#000000');
-      gradient.addColorStop(0.5, '#1f2937');
-      gradient.addColorStop(1, '#000000');
+      gradient.addColorStop(0, "#000000");
+      gradient.addColorStop(0.5, "#1f2937");
+      gradient.addColorStop(1, "#000000");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -140,27 +141,27 @@ const WhyAttendHero = () => {
       }
       connect();
     };
-    
+
     const handleMouseMove = (event) => {
       mouse.x = event.clientX;
       mouse.y = event.clientY;
     };
-    
+
     const handleMouseOut = () => {
       mouse.x = null;
       mouse.y = null;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseout', handleMouseOut);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseout", handleMouseOut);
 
     init();
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseout', handleMouseOut);
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseout", handleMouseOut);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -168,26 +169,26 @@ const WhyAttendHero = () => {
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
       {/* Canvas Background */}
-      <canvas 
-        ref={canvasRef} 
+      <canvas
+        ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full z-0"
       />
 
-      {/* Content - Ensure it stays above canvas */}
+      {/* Content */}
       <div
-        className={`relative z-10 min-h-screen flex flex-col justify-center px-6 py-16 transition-all duration-1000 ease-out ${
+        className={`relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-12 py-10 md:py-16 transition-all duration-1000 ease-out ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
         <div className="max-w-7xl mx-auto">
-          {/* Main Title Section */}
-          <div className="text-center mb-10">
-            <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[0.9] mb-8 relative z-20">
+          {/* Main Title */}
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-snug md:leading-tight mb-6">
               Why Should You <span className="text-red-500">Attend it ?</span>
             </h1>
 
-            <div className="space-y-6 max-w-6xl mx-auto relative z-20">
-              <p className="text-lg md:text-xl text-gray-200 font-light leading-relaxed">
+            <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-gray-200 font-light leading-relaxed">
                 Opportunities like this don't come often, an internship
                 opportunity while you're still in school. Add it to your
                 profile, showcase certificates and Letters of Recommendation,
@@ -195,9 +196,9 @@ const WhyAttendHero = () => {
                 preparing; you'll already be proving.
               </p>
 
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                 <div className="h-px w-16 bg-gradient-to-r from-transparent via-red-500 to-transparent"></div>
-                <p className="text-red-500 font-bold text-lg md:text-xl tracking-wide">
+                <p className="text-red-500 font-bold text-base sm:text-lg md:text-xl tracking-wide text-center">
                   That's how you get noticed.
                 </p>
                 <div className="h-px w-16 bg-gradient-to-l from-transparent via-red-500 to-transparent"></div>
@@ -206,109 +207,61 @@ const WhyAttendHero = () => {
           </div>
 
           {/* Rewards Section */}
-          <div className="text-center z-20">
-            <h2 className="text-white text-2xl md:text-3xl lg:text-4xl font-black tracking-tight mb-12">
-              Rewards and <span className="text-red-500">Recognition</span>
+          <div className="text-center">
+            <h2 className="text-white text-md sm:text-lg md:text-xl lg:text-2xl font-black tracking-tight mb-8 sm:mb-10 md:mb-12">
+              About the 4-Year Residential B.TECH Program at <span className="text-red-500">upGrad School of Technology</span>
             </h2>
 
-            {/* Modern Features Grid */}
+            {/* Cards Grid */}
             <div className="max-w-6xl mx-auto">
-              {/* Top Row - 2 Cards */}
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
-                <div className="group relative">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/50 to-red-800/50 rounded-2xl blur opacity-0  transition-opacity duration-500"></div>
-                  <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
-                    <div className="flex items-start gap-3 mb-3">
-                      <h3 className="text-red-500 font-semibold text-sm uppercase tracking-wider">
-                        NAAC Accredited Program
-                      </h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      A 4-year fully residential B.Tech program, NAAC
-                      accredited, designed to create future-ready engineers,
-                      innovators, and leaders.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="group relative">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/50 to-red-800/50 rounded-2xl blur opacity-0  transition-opacity duration-500"></div>
-                  <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
-                    <div className="flex items-start gap-3 mb-3">
-                      <h3 className="text-red-500 font-semibold text-sm uppercase tracking-wider">
-                        Cutting-Edge Learning
-                      </h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Learn GenAI, Robotics, and Quantum Computing from seasoned
-                      industry professionals who've built and scaled in the real
-                      world.
-                    </p>
-                  </div>
-                </div>
+              {/* Top Row */}
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2 mb-6">
+                <Card title="NAAC Accredited Program">
+                  A 4-year fully residential B.Tech program, NAAC accredited,
+                  designed to create future-ready engineers, innovators, and
+                  leaders.
+                </Card>
+                <Card title="Cutting-Edge Learning">
+                  Learn GenAI, Robotics, and Quantum Computing from seasoned
+                  industry professionals who've built and scaled in the real
+                  world.
+                </Card>
               </div>
 
-              {/* Middle Row - 2 Cards */}
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
-                <div className="group relative">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/50 to-red-800/50 rounded-2xl blur opacity-0  transition-opacity duration-500"></div>
-                  <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
-                    <div className="flex items-start gap-3 mb-3">
-                      <h3 className="text-red-500 font-semibold text-sm uppercase tracking-wider">
-                        Clear Outcomes
-                      </h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Crystal clear outcomes: high-paying jobs, groundbreaking
-                      research, and entrepreneurship pathways.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="group relative">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/50 to-red-800/50 rounded-2xl blur opacity-0  transition-opacity duration-500"></div>
-                  <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
-                    <div className="flex items-start gap-3 mb-3">
-                      <h3 className="text-red-500 font-semibold text-sm uppercase tracking-wider">
-                        WorkX360™ Experience
-                      </h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Dive into WorkX360™ internships (₹25K/month avg.),
-                      hackathons, global immersions, and real-world projects.
-                    </p>
-                  </div>
-                </div>
+              {/* Middle Row */}
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2 mb-6">
+                <Card title="Clear Outcomes">
+                  Crystal clear outcomes: high-paying jobs, groundbreaking
+                  research, and entrepreneurship pathways.
+                </Card>
+                <Card title="WorkX360™ Experience">
+                  Dive into WorkX360™ internships (₹25K/month avg.), hackathons,
+                  global immersions, and real-world projects.
+                </Card>
               </div>
 
-              {/* Bottom Full Width Card */}
+              {/* Bottom Full Card */}
               <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-red-500/30 via-red-500/20 to-red-500/30 rounded-3xl blur-xl opacity-0  transition-opacity duration-700"></div>
-                <div className="relative bg-gradient-to-r from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl p-8 rounded-3xl border border-gray-700/50 hover:border-red-500/40 transition-all duration-500">
+                <div className="relative bg-gradient-to-r from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-700/50 hover:border-red-500/40 transition-all duration-500">
                   <div className="text-center">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                      <h3 className="text-red-500 font-bold text-base uppercase tracking-wider">
-                        Ultimate Support System
-                      </h3>
-                    </div>
-                    <p className="text-gray-200 text-base md:text-lg leading-relaxed max-w-4xl mx-auto">
+                    <h3 className="text-red-500 font-bold text-sm sm:text-base uppercase tracking-wider mb-3">
+                      Ultimate Support System
+                    </h3>
+                    <p className="text-gray-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
                       Backed by{" "}
                       <span className="text-white font-semibold">
                         3000+ hiring partners
                       </span>
-                      ,
+                      ,{" "}
                       <span className="text-white font-semibold">
-                        {" "}
                         scholarships up to 100%
                       </span>
-                      , and
+                      , and{" "}
                       <span className="text-white font-semibold">
-                        {" "}
                         lifelong career support
                       </span>
-                      . This isn't just a degree — it's your
+                      . This isn't just a degree — it's your{" "}
                       <span className="bg-gradient-to-r from-red-500 to-red-500 bg-clip-text text-transparent font-bold">
-                        {" "}
                         launchpad to building the future
                       </span>
                       .
@@ -319,9 +272,22 @@ const WhyAttendHero = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>  
     </section>
   );
 };
+
+const Card = ({ title, children }) => (
+  <div className="group relative">
+    <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-5 sm:p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
+      <h3 className="text-red-500 font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2">
+        {title}
+      </h3>
+      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+        {children}
+      </p>
+    </div>
+  </div>
+);
 
 export default WhyAttendHero;

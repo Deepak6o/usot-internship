@@ -15,13 +15,12 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <Introduction />
-
+      <AdmissionProcess />
       <Reward />
       <AfterInternship />
       <Session />
       <WhyAttend />
-
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }

@@ -15,44 +15,67 @@ const RewardCard = ({ icon, title, description }) => (
 );
 
 const Reward = () => {
-  const rewardTypes = [
-    {
-      icon: (
-        <img
-          src="/assets/rw1.png"
-          alt="Learning Rewards"
-          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-        />
-      ),
-      title: "Excellency Rewards",
-      description:
-        "After every session, you’ll take part in an activity or quiz. Top performers from each round will be recognized as uGSOT Star Learners and win exciting prizes like smart watches, Xbox top brands vouchers, and official merchandise.",
-    },
-    {
-      icon: (
-        <img
-          src="/assets/rw2.png"
-          alt="Consistency Rewards"
-          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-        />
-      ),
-      title: "Consistency Rewards",
-      description:
-        "Showing up matters. Students who attend all sessions and actively participate will earn the Certificate of Active Engagement, a special recognition of consistency, discipline, and commitment that will stand out on any profile.",
-    },
-    {
-      icon: (
-        <img
-          src="/assets/rw3.png"
-          alt="Creator's Reward"
-          className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-        />
-      ),
-      title: "Creator's Reward",
-      description:
-        "Love making content? Here’s your chance! Create a reel, vlog, or short video about your uGSOT internship journey. If your video gains strong reach and creativity points, top 3 winners can claim the uGSOT Creator’s Award with exclusive prizes like  smart watches, headphones, top brands vouchers and a feature on our official channel.",
-    },
-  ];
+ const rewardTypes = [
+  {
+    icon: (
+      <img
+        src="/assets/rw1.png"
+        alt="Learning Rewards"
+        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+      />
+    ),
+    title: "Excellency Rewards",
+    description: (
+      <>
+        After every session, you’ll take part in an activity or quiz. Top
+        performers from each round will be recognized as{" "}
+        <span className="font-bold">uGSOT Star Learners</span> and win exciting
+        prizes like smart watches, Xbox top brands vouchers, and official
+        merchandise.
+      </>
+    ),
+  },
+  {
+    icon: (
+      <img
+        src="/assets/rw2.png"
+        alt="Consistency Rewards"
+        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+      />
+    ),
+    title: "Consistency Rewards",
+    description: (
+      <>
+        Showing up matters. Students who attend all sessions and actively
+        participate will earn the{" "}
+        <span className="font-bold">Certificate of Active Engagement</span>, a
+        special recognition of consistency, discipline, and commitment that will
+        stand out on any profile.
+      </>
+    ),
+  },
+  {
+    icon: (
+      <img
+        src="/assets/rw3.png"
+        alt="Creator's Reward"
+        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+      />
+    ),
+    title: "Creator's Reward",
+    description: (
+      <>
+        Love making content? Here’s your chance! Create a reel, vlog, or short
+        video about your uGSOT internship journey. If your video gains strong
+        reach and creativity points, top 3 winners can claim the{" "}
+        <span className="font-bold">uGSOT Creator’s Award</span> with exclusive
+        prizes like smart watches, headphones, top brands vouchers and a feature
+        on our official channel.
+      </>
+    ),
+  },
+];
+
 
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-white">

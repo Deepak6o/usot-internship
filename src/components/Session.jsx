@@ -40,7 +40,7 @@ const Session = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl font-bold leading-tight text-red-600 sm:text-4xl xl:text-5xl font-pj">
-            Topics for the Bootcamps
+            Topics for the Internship
           </h2>
           <p className="mt-4 text-base leading-7 text-gray-600 sm:mt-8 font-pj">
             Each topic will teach essential AI and digital skills to help you thrive in the modern world. 

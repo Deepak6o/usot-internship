@@ -204,7 +204,7 @@ const Card3D = React.forwardRef((props, ref) => {
           transition={{ duration: 0.3 }}
         >
           <motion.h3
-            className="text-lg sm:text-xl font-bold tracking-tight drop-shadow-md leading-snug"
+            className="text-lg sm:text-xl font-semibold tracking-tight drop-shadow-md leading-snug"
             animate={{ scale: hovered ? 1.02 : 1 }}
             transition={{ duration: 0.3 }}
           >
@@ -253,24 +253,20 @@ export default function AfterInternship() {
   const items = [
     {
       id: "certificate",
-      title: "Certificate of Completion",
-      description:
-        "Certificate of Completion from upGrad School of Technology.",
+      title: "Certificate of Completion from upGrad School of Technology.",
+      
       iconSrc: "/assets/i1.png",
       theme: "primary",
     },
     {
       id: "recommendation",
-      title: "Letters of Recommendation",
-      description:
-        "Letters of Recommendation for top performers, signed by industry-embedded faculty.",
+      title: "Letters of Recommendation for top performers, signed by industry-embedded faculty.",
       iconSrc: "/assets/i2.png",
       theme: "secondary",
     },
     {
       id: "scholarship",
-      title: "Scholarship Opportunities",
-      description: "Exclusive opportunities to apply for uGSOT scholarships.",
+      title: "Exclusive opportunities to apply for uGSOT scholarships.",
       iconSrc: "/assets/i3.png",
       theme: "accent",
     },
@@ -302,7 +298,7 @@ export default function AfterInternship() {
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden">
+    <section className="py-6 sm:py-6 lg:py-10 bg-white relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02]">

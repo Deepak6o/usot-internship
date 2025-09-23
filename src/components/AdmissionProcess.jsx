@@ -66,7 +66,7 @@ const AdmissionProcess = () => {
             Admission Process
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            Follow these simple steps to complete your admission
+            A simple, transparent journey from application to admission.
           </p>
         </div>
 

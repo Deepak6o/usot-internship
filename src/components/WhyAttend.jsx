@@ -208,7 +208,7 @@ const WhyAttendHero = () => {
 
           {/* Rewards Section */}
           <div className="text-center">
-            <h2 className="text-white text-md sm:text-lg md:text-xl lg:text-2xl font-black tracking-tight mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-white text-xl sm:text-xl md:text-2xl lg:text-3xl font-black tracking-tight mb-8 sm:mb-10 md:mb-12">
               About the 4-Year Residential B.TECH Program at <span className="text-red-500">upGrad School of Technology</span>
             </h2>
 
@@ -244,10 +244,10 @@ const WhyAttendHero = () => {
               <div className="group relative">
                 <div className="relative bg-gradient-to-r from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-700/50 hover:border-red-500/40 transition-all duration-500">
                   <div className="text-center">
-                    <h3 className="text-red-500 font-bold text-sm sm:text-base uppercase tracking-wider mb-3">
+                    <h3 className="text-white font-bold text-sm sm:text-base uppercase tracking-wider mb-3">
                       Ultimate Support System
                     </h3>
-                    <p className="text-gray-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+                    <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
                       Backed by{" "}
                       <span className="text-white font-semibold">
                         3000+ hiring partners
@@ -269,9 +269,19 @@ const WhyAttendHero = () => {
                   </div>
                 </div>
               </div>
+
+    
             </div>
           </div>
+
+         
         </div>
+         <div>
+  <p className="text-white text-center italic mt-10">
+    **From AI to anime, from building games to building your brand, this challenge is your playground. Let’s make learning lit**.
+  </p>
+</div>
+
       </div>  
     </section>
   );
@@ -280,10 +290,10 @@ const WhyAttendHero = () => {
 const Card = ({ title, children }) => (
   <div className="group relative">
     <div className="relative bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl p-5 sm:p-6 rounded-2xl border border-gray-800/50 hover:border-red-500/30 transition-all duration-300">
-      <h3 className="text-red-500 font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2">
+      <h3 className="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider mb-2">
         {title}
       </h3>
-      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
         {children}
       </p>
     </div>

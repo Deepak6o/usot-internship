@@ -235,7 +235,7 @@ const WhyAttendHero = () => {
                   research, and entrepreneurship pathways.
                 </Card>
                 <Card title="WorkX360™ Experience">
-                  Dive into WorkX360™ internships (₹25K/month avg.), hackathons,
+                  Dive into WorkX360™ internships, hackathons,
                   global immersions, and real-world projects.
                 </Card>
               </div>

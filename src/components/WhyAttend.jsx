@@ -208,8 +208,8 @@ const WhyAttendHero = () => {
 
           {/* Rewards Section */}
           <div className="text-center">
-            <h2 className="text-white text-xl sm:text-xl md:text-2xl lg:text-3xl font-black tracking-tight mb-8 sm:mb-10 md:mb-12">
-              About the 4-Year Residential B.TECH Program at <span className="text-red-500">upGrad School of Technology</span>
+            <h2 className="text-white text-2xl sm:text-2xl md:text-2xl lg:text-4xl font-black tracking-tight mb-8 sm:mb-10 md:mb-12">
+              About the 4-Year Residential B.Tech Program at <br /> <span className="text-red-500">upGrad School of Technology</span>
             </h2>
 
             {/* Cards Grid */}
@@ -276,11 +276,7 @@ const WhyAttendHero = () => {
 
          
         </div>
-         <div>
-  <p className="text-white text-center italic mt-10">
-    **From AI to anime, from building games to building your brand, this challenge is your playground. Let’s make learning lit**.
-  </p>
-</div>
+         
 
       </div>  
     </section>

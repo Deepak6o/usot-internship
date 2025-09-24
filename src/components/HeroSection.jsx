@@ -7,33 +7,56 @@ const HeroSection = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isFormScrolledPast, setIsFormScrolledPast] = useState(false);
+  const [vantaReady, setVantaReady] = useState(false);
 
   useEffect(() => {
     let threeLoaded = false;
     let vantaLoaded = false;
+    let initAttempts = 0;
+    const maxInitAttempts = 10;
 
     const initVanta = () => {
+      if (initAttempts >= maxInitAttempts) {
+        console.log("Max Vanta initialization attempts reached");
+        return;
+      }
+
+      initAttempts++;
+
       if (
         threeLoaded &&
         vantaLoaded &&
         vantaRef.current &&
         window.VANTA &&
+        window.VANTA.RINGS &&
         !vantaEffect.current
       ) {
         try {
           const element = vantaRef.current;
-          if (element.offsetWidth === 0 || element.offsetHeight === 0) {
-            setTimeout(initVanta, 100);
+          const rect = element.getBoundingClientRect();
+          
+          // More thorough dimension checking
+          if (rect.width === 0 || rect.height === 0 || !element.offsetParent) {
+            setTimeout(initVanta, 200);
             return;
           }
+
+          // Ensure element is visible and has computed styles
+          const computedStyle = window.getComputedStyle(element);
+          if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+            setTimeout(initVanta, 200);
+            return;
+          }
+
+          console.log("Initializing Vanta with dimensions:", rect.width, "x", rect.height);
 
           vantaEffect.current = window.VANTA.RINGS({
             el: element,
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
+            minHeight: Math.max(200, rect.height),
+            minWidth: Math.max(200, rect.width),
             scale: 1.0,
             scaleMobile: 1.0,
             backgroundColor: 0xffffff,
@@ -44,9 +67,25 @@ const HeroSection = () => {
             forceAnimate: true,
             THREE: window.THREE,
           });
+
+          console.log("Vanta effect initialized successfully");
+          setVantaReady(true);
         } catch (error) {
-          console.log("Vanta effect initialization failed:", error);
+          console.error("Vanta effect initialization failed:", error);
+          // Try alternative background if Vanta fails
+          if (vantaRef.current) {
+            vantaRef.current.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
+          }
         }
+      } else {
+        // Log what's missing
+        if (!threeLoaded) console.log("Three.js not loaded");
+        if (!vantaLoaded) console.log("Vanta.js not loaded");
+        if (!vantaRef.current) console.log("Vanta ref not available");
+        if (!window.VANTA) console.log("VANTA not available");
+        if (!window.VANTA?.RINGS) console.log("VANTA.RINGS not available");
+        
+        setTimeout(initVanta, 200);
       }
     };
 
@@ -57,15 +96,17 @@ const HeroSection = () => {
           resolve();
           return;
         }
+        
         const script = document.createElement("script");
-        script.src =
-          "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
         script.onload = () => {
           threeLoaded = true;
+          console.log("Three.js loaded successfully");
           resolve();
         };
-        script.onerror = () => {
-          console.error("Failed to load Three.js");
+        script.onerror = (error) => {
+          console.error("Failed to load Three.js:", error);
+          threeLoaded = false;
           resolve();
         };
         document.head.appendChild(script);
@@ -81,14 +122,15 @@ const HeroSection = () => {
         }
 
         const script = document.createElement("script");
-        script.src =
-          "https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.rings.min.js";
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.rings.min.js";
         script.onload = () => {
           vantaLoaded = true;
+          console.log("Vanta Rings loaded successfully");
           resolve();
         };
-        script.onerror = () => {
-          console.error("Failed to load Vanta Rings");
+        script.onerror = (error) => {
+          console.error("Failed to load Vanta Rings:", error);
+          vantaLoaded = false;
           resolve();
         };
         document.head.appendChild(script);
@@ -96,32 +138,53 @@ const HeroSection = () => {
     };
 
     const loadScripts = async () => {
-      await loadThreeJS();
-      await loadVantaRings();
+      try {
+        await loadThreeJS();
+        await loadVantaRings();
 
-      setTimeout(() => {
-        if (vantaRef.current) {
-          const rect = vantaRef.current.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            initVanta();
-          } else {
-            setTimeout(initVanta, 200);
-          }
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initVanta, 300);
+          });
+        } else {
+          setTimeout(initVanta, 300);
         }
-      }, 100);
+      } catch (error) {
+        console.error("Error loading scripts:", error);
+      }
     };
 
     loadScripts();
 
+    // Cleanup function
     return () => {
       if (vantaEffect.current) {
         try {
           vantaEffect.current.destroy();
+          vantaEffect.current = null;
+          console.log("Vanta effect destroyed");
         } catch (error) {
-          console.log("Vanta cleanup error:", error);
+          console.error("Vanta cleanup error:", error);
         }
       }
     };
+  }, []);
+
+  // Resize handler to reinitialize Vanta if needed
+  useEffect(() => {
+    const handleResize = () => {
+      if (vantaEffect.current && vantaRef.current) {
+        try {
+          vantaEffect.current.resize();
+        } catch (error) {
+          console.error("Vanta resize error:", error);
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -534,7 +597,10 @@ const HeroSection = () => {
         <div
           ref={vantaRef}
           className="absolute inset-0 w-full h-full"
-          style={{ zIndex: 0 }}
+          style={{ 
+            zIndex: 0,
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)', // Fallback background
+          }}
         />
 
         <div
@@ -553,7 +619,7 @@ const HeroSection = () => {
                   <span className="text-transparent bg-clip-text bg-red-600 animate-pulse">
                     Internship Challenge <br />
                   </span>{" "}
-                  by ugSOT
+                  by uGSOT
                 </h1>
 
                 <p className="mt-3 text-base sm:text-lg md:text-xl font-medium text-gray-700 animate-fade-in-up">

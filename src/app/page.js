@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import AfterInternship from "@/components/AfterInternship";
 import WhyAttend from "@/components/WhyAttend";
 import AdmissionProcess from "@/components/AdmissionProcess";
+import FAQSection from "@/components/FAQSection";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <AfterInternship />
       <Session />
       <WhyAttend />
+     <FAQSection />
       <Footer />
     </>
   );

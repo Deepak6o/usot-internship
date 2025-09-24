@@ -78,12 +78,12 @@ const Reward = () => {
 
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-white">
+    <section className="py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header Section */}
         <header className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-red-600 mb-4">
-            Here’s how rewards work at IGNITE Challenge:
+            Here’s How Rewards Work at IGNITE Challenge
           </h2>
         </header>
 
@@ -111,7 +111,7 @@ const Reward = () => {
               During the Internship
             </p>
             <p className="text-base sm:text-lg font-medium text-gray-700 leading-relaxed">
-              Perform well, and you unlock exciting rewards along the way:
+              Perform well, and you bag exciting rewards along the way
             </p>
           </div>
 

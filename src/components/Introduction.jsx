@@ -35,10 +35,7 @@ export default function ChallengeSection() {
           <p className="text-sm sm:text-base md:text-lg lg:text-2xl text-gray-100 max-w-md sm:max-w-2xl md:max-w-4xl lg:max-w-6xl font-medium md:font-semibold mx-auto drop-shadow-md leading-relaxed">
             A one-of-its-kind internship challenge built to spark your
             creativity, innovation, and learning. Designed exclusively for{" "}
-            <span className="text-red-600">Grade 11 & 12</span> students, it
-            brings you hands-on sessions with industry experts where you’ll dive
-            into AI, social media, and beyond powered by upGrad School of
-            Technology. 
+            <span className="text-red-600">Grade 11 & 12</span> students, it brings you hands-on sessions with industry experts where you’ll dive into AI, social media, and beyond, all at zero cost, powered by upGrad School of Technology. 
           </p>
         </div>
       </section>

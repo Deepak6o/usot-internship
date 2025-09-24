@@ -63,10 +63,10 @@ const AdmissionProcess = () => {
         {/* Heading */}
         <div className="text-center space-y-2 px-2">
           <h2 className="text-2xl sm:text-3xl text-red-600 lg:text-4xl font-bold text-foreground">
-            Admission Process
+            The Internship Journey
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            A simple, transparent journey from application to admission.
+            A simple, transparent journey from application to completion.
           </p>
         </div>
 

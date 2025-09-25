@@ -50,7 +50,7 @@ const Footer = () => {
                 <h3 className="text-lg font-semibold mb-2">Support</h3>
                 <div className="space-y-2">
                   
-                  <div className="flex items-center justify-center sm:justify-end space-x-2">
+                  <div className="flex items-center pb-10 justify-center sm:justify-end space-x-2">
                     <Mail className="w-4 h-4 text-gray-500" />
                     <span className="text-gray-600 text-sm">
                       Marketing@upgradsot.com

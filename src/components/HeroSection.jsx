@@ -346,9 +346,9 @@ const HeroSection = () => {
             <h1 className="mb-1 text-lg sm:text-xl font-bold text-white">
               Register Now !
             </h1>
-            <p className="text-xs sm:text-sm text-red-100">
+            {/* <p className="text-xs sm:text-sm text-red-100">
               4664 people registered
-            </p>
+            </p> */}
           </div>
 
           <div className="p-4 sm:p-6">
@@ -584,7 +584,7 @@ const HeroSection = () => {
         <div className="flex items-center justify-center mt-2 pt-2 border-t border-gray-100">
           <div className="flex items-center text-xs text-gray-500">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
-            <span>4664 registered</span>
+            {/* <span>4664 registered</span> */}
           </div>
         </div>
       </div>

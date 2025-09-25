@@ -13,7 +13,7 @@ const AdmissionProcess = () => {
     },
     {
       id: 2,
-      title: "Attend Workshop",
+      title: "Attend Workshops",
       icon: <Users className="w-5 h-5 sm:w-6 sm:h-6" />,
       completed: true
     },

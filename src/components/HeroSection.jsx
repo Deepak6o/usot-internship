@@ -622,9 +622,7 @@ const HeroSection = () => {
                   by uGSOT
                 </h1>
 
-                <p className="mt-3 text-base sm:text-lg md:text-xl font-medium text-gray-700 animate-fade-in-up">
-                  relate it with the tech and non-tech
-                </p>
+               
 
                 <p
                   className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl text-black animate-fade-in-up"

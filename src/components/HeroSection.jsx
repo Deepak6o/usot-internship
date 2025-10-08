@@ -34,7 +34,7 @@ const HeroSection = () => {
         try {
           const element = vantaRef.current;
           const rect = element.getBoundingClientRect();
-          
+
           // More thorough dimension checking
           if (rect.width === 0 || rect.height === 0 || !element.offsetParent) {
             setTimeout(initVanta, 200);
@@ -43,12 +43,20 @@ const HeroSection = () => {
 
           // Ensure element is visible and has computed styles
           const computedStyle = window.getComputedStyle(element);
-          if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+          if (
+            computedStyle.display === "none" ||
+            computedStyle.visibility === "hidden"
+          ) {
             setTimeout(initVanta, 200);
             return;
           }
 
-          console.log("Initializing Vanta with dimensions:", rect.width, "x", rect.height);
+          console.log(
+            "Initializing Vanta with dimensions:",
+            rect.width,
+            "x",
+            rect.height
+          );
 
           vantaEffect.current = window.VANTA.RINGS({
             el: element,
@@ -74,7 +82,8 @@ const HeroSection = () => {
           console.error("Vanta effect initialization failed:", error);
           // Try alternative background if Vanta fails
           if (vantaRef.current) {
-            vantaRef.current.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
+            vantaRef.current.style.background =
+              "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)";
           }
         }
       } else {
@@ -84,7 +93,7 @@ const HeroSection = () => {
         if (!vantaRef.current) console.log("Vanta ref not available");
         if (!window.VANTA) console.log("VANTA not available");
         if (!window.VANTA?.RINGS) console.log("VANTA.RINGS not available");
-        
+
         setTimeout(initVanta, 200);
       }
     };
@@ -96,9 +105,10 @@ const HeroSection = () => {
           resolve();
           return;
         }
-        
+
         const script = document.createElement("script");
-        script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
+        script.src =
+          "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
         script.onload = () => {
           threeLoaded = true;
           console.log("Three.js loaded successfully");
@@ -122,7 +132,8 @@ const HeroSection = () => {
         }
 
         const script = document.createElement("script");
-        script.src = "https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.rings.min.js";
+        script.src =
+          "https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.rings.min.js";
         script.onload = () => {
           vantaLoaded = true;
           console.log("Vanta Rings loaded successfully");
@@ -143,8 +154,8 @@ const HeroSection = () => {
         await loadVantaRings();
 
         // Wait for DOM to be fully ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
             setTimeout(initVanta, 300);
           });
         } else {
@@ -183,8 +194,8 @@ const HeroSection = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -201,7 +212,7 @@ const HeroSection = () => {
       if (formSection) {
         const formRect = formSection.getBoundingClientRect();
         const isFormCompletelyPast = formRect.bottom < 0;
-        
+
         if (isFormCompletelyPast !== isFormScrolledPast) {
           setIsFormScrolledPast(isFormCompletelyPast);
         }
@@ -211,7 +222,7 @@ const HeroSection = () => {
     window.addEventListener("scroll", handleScroll);
     // Call once to set initial state
     handleScroll();
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isScrolled, isFormScrolledPast]);
 
@@ -239,12 +250,12 @@ const HeroSection = () => {
 
   const openPopup = () => {
     setShowPopup(true);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const closePopup = () => {
     setShowPopup(false);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   // Registration Form Component
@@ -255,7 +266,8 @@ const HeroSection = () => {
       email: "",
       schoolName: "",
       standard: "",
-      city: "",
+      residentialAddress: "",
+      pincode: ["", "", "", "", "", ""],
     });
 
     const [errors, setErrors] = useState({});
@@ -270,7 +282,8 @@ const HeroSection = () => {
           return "";
         case "phone":
           if (!value.trim()) return "Phone number is required";
-          if (!/^[0-9]{10}$/.test(value)) return "Phone number must be 10 digits";
+          if (!/^[0-9]{10}$/.test(value))
+            return "Phone number must be 10 digits";
           return "";
         case "email":
           if (!value.trim()) return "Email is required";
@@ -279,13 +292,21 @@ const HeroSection = () => {
           return "";
         case "schoolName":
           if (!value.trim()) return "School name is required";
-          if (value.length < 2) return "School name must be at least 2 characters";
+          if (value.length < 2)
+            return "School name must be at least 2 characters";
           return "";
         case "standard":
           if (!value) return "Please select your standard";
           return "";
-        case "city":
-          if (!value.trim()) return "City name is required";
+        case "residentialAddress":
+          if (!value.trim()) return "Residential address is required";
+          if (value.length < 10) return "Please provide a complete address";
+          return "";
+        case "pincode":
+          const pincodeString = Array.isArray(value) ? value.join("") : value;
+          if (!pincodeString.trim()) return "Pincode is required";
+          if (!/^[0-9]{6}$/.test(pincodeString))
+            return "Pincode must be 6 digits";
           return "";
         default:
           return "";
@@ -297,6 +318,37 @@ const HeroSection = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
       const error = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: error }));
+    };
+
+    const handlePincodeChange = (index, value) => {
+      // Only allow digits
+      if (value && !/^[0-9]$/.test(value)) return;
+
+      const newPincode = [...formData.pincode];
+      newPincode[index] = value;
+      setFormData((prev) => ({ ...prev, pincode: newPincode }));
+
+      // Validate the complete pincode
+      const error = validateField("pincode", newPincode);
+      setErrors((prev) => ({ ...prev, pincode: error }));
+
+      // Auto-focus next input when a digit is entered
+      if (value && index < 5) {
+        const nextInput = document.getElementById(`pincode-${index + 1}`);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }
+    };
+
+    const handlePincodeKeyDown = (index, e) => {
+      // Handle backspace to move to previous input
+      if (e.key === "Backspace" && !formData.pincode[index] && index > 0) {
+        const prevInput = document.getElementById(`pincode-${index - 1}`);
+        if (prevInput) {
+          prevInput.focus();
+        }
+      }
     };
 
     const handleBlur = (e) => {
@@ -330,7 +382,8 @@ const HeroSection = () => {
             email: "",
             schoolName: "",
             standard: "",
-            city: "",
+            residentialAddress: "",
+            pincode: ["", "", "", "", "", ""],
           });
           setErrors({});
           setTouched({});
@@ -365,7 +418,9 @@ const HeroSection = () => {
                   onBlur={handleBlur}
                   placeholder="Enter your full name"
                   className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.name && touched.name ? "border-red-300" : "border-gray-300"
+                    errors.name && touched.name
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.name && touched.name && (
@@ -385,11 +440,15 @@ const HeroSection = () => {
                   onBlur={handleBlur}
                   placeholder="Enter 10-digit phone number"
                   className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.phone && touched.phone ? "border-red-300" : "border-gray-300"
+                    errors.phone && touched.phone
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.phone && touched.phone && (
-                  <div className="mt-1 text-xs text-red-500">{errors.phone}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.phone}
+                  </div>
                 )}
               </div>
 
@@ -405,11 +464,15 @@ const HeroSection = () => {
                   onBlur={handleBlur}
                   placeholder="Enter your email address"
                   className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.email && touched.email ? "border-red-300" : "border-gray-300"
+                    errors.email && touched.email
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.email && touched.email && (
-                  <div className="mt-1 text-xs text-red-500">{errors.email}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.email}
+                  </div>
                 )}
               </div>
 
@@ -425,11 +488,15 @@ const HeroSection = () => {
                   onBlur={handleBlur}
                   placeholder="Enter your school name"
                   className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.schoolName && touched.schoolName ? "border-red-300" : "border-gray-300"
+                    errors.schoolName && touched.schoolName
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.schoolName && touched.schoolName && (
-                  <div className="mt-1 text-xs text-red-500">{errors.schoolName}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.schoolName}
+                  </div>
                 )}
               </div>
 
@@ -464,27 +531,73 @@ const HeroSection = () => {
                   </label>
                 </div>
                 {errors.standard && touched.standard && (
-                  <div className="mt-1 text-xs text-red-500">{errors.standard}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.standard}
+                  </div>
                 )}
               </div>
 
               <div>
                 <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
-                  City *
+                  Residential Address *
                 </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
+                <textarea
+                  name="residentialAddress"
+                  value={formData.residentialAddress}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter your city name"
-                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.city && touched.city ? "border-red-300" : "border-gray-300"
+                  placeholder="Enter your complete residential address"
+                  rows="3"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-1.5 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 resize-none ${
+                    errors.residentialAddress && touched.residentialAddress
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
-                {errors.city && touched.city && (
-                  <div className="mt-1 text-xs text-red-500">{errors.city}</div>
+                {errors.residentialAddress && touched.residentialAddress && (
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.residentialAddress}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Pincode *
+                </label>
+                <div className="flex gap-2 ">
+                  {[0, 1, 2, 3, 4, 5].map((index) => (
+                    <input
+                      key={index}
+                      id={`pincode-${index}`}
+                      type="text"
+                      value={formData.pincode[index]}
+                      onChange={(e) =>
+                        handlePincodeChange(index, e.target.value)
+                      }
+                      onKeyDown={(e) => handlePincodeKeyDown(index, e)}
+                      onBlur={() => {
+                        setTouched((prev) => ({ ...prev, pincode: true }));
+                        const error = validateField(
+                          "pincode",
+                          formData.pincode
+                        );
+                        setErrors((prev) => ({ ...prev, pincode: error }));
+                      }}
+                      maxLength="1"
+                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 ${
+                        errors.pincode && touched.pincode
+                          ? "border-red-300 bg-red-50"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
+                      placeholder=""
+                    />
+                  ))}
+                </div>
+                {errors.pincode && touched.pincode && (
+                  <div className="mt-1 text-xs text-red-500 text-center">
+                    {errors.pincode}
+                  </div>
                 )}
               </div>
 
@@ -518,7 +631,7 @@ const HeroSection = () => {
     const [miniFormData, setMiniFormData] = useState({
       name: "",
       phone: "",
-      email: ""
+      email: "",
     });
 
     const handleMiniSubmit = () => {
@@ -529,11 +642,11 @@ const HeroSection = () => {
 
     const handleMiniChange = (e) => {
       const { name, value } = e.target;
-      setMiniFormData(prev => ({ ...prev, [name]: value }));
+      setMiniFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     return (
-      <div 
+      <div
         className="bg-white rounded-xl shadow-2xl p-3 w-72 border border-gray-100 cursor-pointer"
         onClick={openPopup}
       >
@@ -541,7 +654,7 @@ const HeroSection = () => {
           <h3 className="text-sm font-bold text-gray-800">Quick Register</h3>
           <p className="text-xs text-gray-600">Fill to complete registration</p>
         </div>
-        
+
         <div className="space-y-2">
           <input
             type="text"
@@ -580,7 +693,7 @@ const HeroSection = () => {
             Complete Registration →
           </button>
         </div>
-        
+
         <div className="flex items-center justify-center mt-2 pt-2 border-t border-gray-100">
           <div className="flex items-center text-xs text-gray-500">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-1"></div>
@@ -597,9 +710,9 @@ const HeroSection = () => {
         <div
           ref={vantaRef}
           className="absolute inset-0 w-full h-full"
-          style={{ 
+          style={{
             zIndex: 0,
-            background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)', // Fallback background
+            background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)", // Fallback background
           }}
         />
 
@@ -621,8 +734,6 @@ const HeroSection = () => {
                   </span>{" "}
                   by uGSOT
                 </h1>
-
-               
 
                 <p
                   className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl text-black animate-fade-in-up"
@@ -696,7 +807,9 @@ const HeroSection = () => {
       {/* Floating Mini Form - Desktop (Only show when main form is completely scrolled past) */}
       <div
         className={`fixed top-4 right-4 z-50 transition-all duration-500 ease-in-out hidden md:block ${
-          isFormScrolledPast ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"
+          isFormScrolledPast
+            ? "opacity-100 visible scale-100"
+            : "opacity-0 invisible scale-95"
         }`}
       >
         <MiniForm />
@@ -737,22 +850,32 @@ const HeroSection = () => {
       {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={closePopup}
           ></div>
-          
+
           <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="relative">
               <button
                 onClick={closePopup}
                 className="absolute -top-2 -right-2 z-20 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
-              
+
               <div className="transform animate-scale-in">
                 <RegistrationForm />
               </div>

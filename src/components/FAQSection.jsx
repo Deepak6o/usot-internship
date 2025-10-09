@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: "What is the time commitment for participants?",
-    a: "Sessions are planned to be short and impactful, typically a few hours each day over the 10-day program. You can easily manage them alongside school schedules.",
+    a: "Sessions are planned to be short and impactful, typically a few hours every weekend for 8 weeks. You can easily manage them alongside school schedules.",
   },
   {
     q: "How does IGNITE connect to the B.Tech program at uGSOT?",
@@ -34,7 +34,7 @@ const FAQS = [
   },
   {
     q: "Where will I receive details about the workshop schedule after registration?",
-    a: "Once you register, all updates and the detailed workshop schedule will be sent directly to your registered email ID. Keep an eye on your inbox (and spam folder, just in case) to stay informed.",
+    a: "Once you register, all updates and the detailed workshop schedule will be sent directly to your registered email ID & whatsapp group (Joining link will be sent in the email id). Keep an eye on your inbox (and spam folder, just in case) to stay informed.",
   },
 ];
 
@@ -75,7 +75,8 @@ export function FAQSection({ faqs = FAQS }) {
           Frequently Asked <span className="text-red-600">Questions</span>
         </h2>
         <p className="text-center text-gray-600 mt-3 mb-8">
-          Curiosity Leads to Success! Got questions? That's a great sign. Some common queries:
+          Curiosity Leads to Success! Got questions? That's a great sign. Some
+          common queries:
         </p>
 
         {/* FAQ Container */}

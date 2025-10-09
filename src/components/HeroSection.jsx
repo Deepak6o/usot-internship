@@ -263,6 +263,7 @@ const HeroSection = () => {
     const [formData, setFormData] = useState({
       name: "",
       phone: "",
+      parentPhone: "",
       email: "",
       schoolName: "",
       standard: "",
@@ -284,6 +285,13 @@ const HeroSection = () => {
           if (!value.trim()) return "Phone number is required";
           if (!/^[0-9]{10}$/.test(value))
             return "Phone number must be 10 digits";
+          return "";
+        case "parentPhone":
+          if (!value.trim()) return "Parent's phone number is required";
+          if (!/^[0-9]{10}$/.test(value))
+            return "Parent's phone number must be 10 digits";
+          if (value === formData.phone)
+            return "Parent's phone must be different from student's phone";
           return "";
         case "email":
           if (!value.trim()) return "Email is required";
@@ -379,6 +387,7 @@ const HeroSection = () => {
           setFormData({
             name: "",
             phone: "",
+            parentPhone: "",
             email: "",
             schoolName: "",
             standard: "",
@@ -448,6 +457,30 @@ const HeroSection = () => {
                 {errors.phone && touched.phone && (
                   <div className="mt-1 text-xs text-red-500">
                     {errors.phone}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Parent's Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="parentPhone"
+                  value={formData.parentPhone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter parent's 10-digit phone number"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.parentPhone && touched.parentPhone
+                      ? "border-red-300"
+                      : "border-gray-300"
+                  }`}
+                />
+                {errors.parentPhone && touched.parentPhone && (
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.parentPhone}
                   </div>
                 )}
               </div>
@@ -739,15 +772,23 @@ const HeroSection = () => {
                   className="mt-4 text-sm sm:text-base md:text-lg lg:text-xl text-black animate-fade-in-up"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  Dive into hands-on innovation with{" "}
-                  <span className="font-semibold text-red-600">uGSOT</span>,
-                  designed for Grade 11 & Grade 12 students.
+                  Level up your skills with{" "}
+                  <span className="font-semibold text-red-600">
+                    uGSOT Internship Challenge
+                  </span>{" "}
+                  and win enticing awards.
                 </p>
 
                 <div
                   className="mt-6 text-sm sm:text-base md:text-lg text-black space-y-2 animate-fade-in-up"
                   style={{ animationDelay: "0.3s" }}
                 >
+                  <p>
+                    <span className="font-semibold text-red-600">
+                      Total Duration:
+                    </span>{" "}
+                    8 weeks
+                  </p>
                   <p>
                     <span className="font-semibold text-red-600">Starts:</span>{" "}
                     [Insert Date & Time]

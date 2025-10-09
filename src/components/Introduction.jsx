@@ -33,9 +33,14 @@ export default function ChallengeSection() {
           <div className="h-[3px] sm:h-[4px] w-full max-w-xs sm:max-w-md md:max-w-4xl lg:max-w-5xl my-4 sm:my-5 mx-auto bg-gradient-to-r from-transparent via-white to-transparent opacity-70"></div>
 
           <p className="text-sm sm:text-base md:text-lg lg:text-2xl text-gray-100 max-w-md sm:max-w-2xl md:max-w-4xl lg:max-w-6xl font-medium md:font-semibold mx-auto drop-shadow-md leading-relaxed">
-            A one-of-its-kind internship challenge built to spark your
-            creativity, innovation, and learning. Designed exclusively for{" "}
-            <span className="text-red-600">Grade 11 & 12</span> students, it brings you hands-on sessions with industry experts where you’ll dive into AI, social media, and beyond, all at zero cost, powered by upGrad School of Technology. 
+            A one-of-its-kind internship challenge crafted especially for{" "}
+            <span className="text-red-600">Grade 12</span> students, helping you
+            explore creativity, innovation, and real-world tech skills before
+            you step into college life. From AI to social media, dive into
+            hands-on sessions with industry experts, all at zero cost, powered
+            by upGrad School of Technology. And if you're in{" "}
+            <span className="text-red-600">Grade 11</span>? You're welcome too,
+            get a head start while the world's still preparing.
           </p>
         </div>
       </section>

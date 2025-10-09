@@ -6,10 +6,12 @@ const RegistrationForm = () => {
   const [formData, setFormData] = React.useState({
     name: "",
     phone: "",
+    parentPhone: "",
     email: "",
     schoolName: "",
     standard: "",
-    city: "",
+    residentialAddress: "",
+    pincode: ["", "", "", "", "", ""],
   });
 
   const [errors, setErrors] = React.useState({});
@@ -26,6 +28,13 @@ const RegistrationForm = () => {
         if (!value.trim()) return "Phone number is required";
         if (!/^[0-9]{10}$/.test(value)) return "Phone number must be 10 digits";
         return "";
+      case "parentPhone":
+        if (!value.trim()) return "Parent's phone number is required";
+        if (!/^[0-9]{10}$/.test(value))
+          return "Parent's phone number must be 10 digits";
+        if (value === formData.phone)
+          return "Parent's phone must be different from student's phone";
+        return "";
       case "email":
         if (!value.trim()) return "Email is required";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
@@ -33,13 +42,21 @@ const RegistrationForm = () => {
         return "";
       case "schoolName":
         if (!value.trim()) return "School name is required";
-        if (value.length < 2) return "School name must be at least 2 characters";
+        if (value.length < 2)
+          return "School name must be at least 2 characters";
         return "";
       case "standard":
         if (!value) return "Please select your standard";
         return "";
-      case "city":
-        if (!value.trim()) return "City name is required";
+      case "residentialAddress":
+        if (!value.trim()) return "Residential address is required";
+        if (value.length < 10) return "Please provide a complete address";
+        return "";
+      case "pincode":
+        const pincodeString = Array.isArray(value) ? value.join("") : value;
+        if (!pincodeString.trim()) return "Pincode is required";
+        if (!/^[0-9]{6}$/.test(pincodeString))
+          return "Pincode must be 6 digits";
         return "";
       default:
         return "";
@@ -82,10 +99,12 @@ const RegistrationForm = () => {
         setFormData({
           name: "",
           phone: "",
+          parentPhone: "",
           email: "",
           schoolName: "",
           standard: "",
-          city: "",
+          residentialAddress: "",
+          pincode: ["", "", "", "", "", ""],
         });
         setErrors({});
         setTouched({});
@@ -160,7 +179,38 @@ const RegistrationForm = () => {
                   }`}
                 />
                 {errors.phone && touched.phone && (
-                  <div className="mt-1 text-xs text-red-500">{errors.phone}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.phone}
+                  </div>
+                )}
+              </div>
+
+              {/* Parent Phone */}
+              <div>
+                <label
+                  htmlFor="parentPhone"
+                  className="block mb-1 text-sm sm:text-base font-medium text-gray-700"
+                >
+                  Parent's Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  id="parentPhone"
+                  name="parentPhone"
+                  value={formData.parentPhone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter parent's 10-digit phone number"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    errors.parentPhone && touched.parentPhone
+                      ? "border-red-300"
+                      : "border-gray-300"
+                  }`}
+                />
+                {errors.parentPhone && touched.parentPhone && (
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.parentPhone}
+                  </div>
                 )}
               </div>
 
@@ -187,7 +237,9 @@ const RegistrationForm = () => {
                   }`}
                 />
                 {errors.email && touched.email && (
-                  <div className="mt-1 text-xs text-red-500">{errors.email}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.email}
+                  </div>
                 )}
               </div>
 
@@ -214,7 +266,9 @@ const RegistrationForm = () => {
                   }`}
                 />
                 {errors.schoolName && touched.schoolName && (
-                  <div className="mt-1 text-xs text-red-500">{errors.schoolName}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.schoolName}
+                  </div>
                 )}
               </div>
 
@@ -250,34 +304,105 @@ const RegistrationForm = () => {
                   </label>
                 </div>
                 {errors.standard && touched.standard && (
-                  <div className="mt-1 text-xs text-red-500">{errors.standard}</div>
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.standard}
+                  </div>
                 )}
               </div>
 
-              {/* City */}
+              {/* Residential Address */}
               <div>
                 <label
-                  htmlFor="city"
+                  htmlFor="residentialAddress"
                   className="block mb-1 text-sm sm:text-base font-medium text-gray-700"
                 >
-                  City *
+                  Residential Address *
                 </label>
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  value={formData.city}
+                <textarea
+                  id="residentialAddress"
+                  name="residentialAddress"
+                  value={formData.residentialAddress}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter your city name"
-                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-2 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    errors.city && touched.city
+                  placeholder="Enter your complete residential address"
+                  rows="3"
+                  className={`w-full px-2 py-1.5 sm:px-3 sm:py-1.5 border rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-500 resize-none ${
+                    errors.residentialAddress && touched.residentialAddress
                       ? "border-red-300"
                       : "border-gray-300"
                   }`}
                 />
-                {errors.city && touched.city && (
-                  <div className="mt-1 text-xs text-red-500">{errors.city}</div>
+                {errors.residentialAddress && touched.residentialAddress && (
+                  <div className="mt-1 text-xs text-red-500">
+                    {errors.residentialAddress}
+                  </div>
+                )}
+              </div>
+
+              {/* Pincode */}
+              <div>
+                <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
+                  Pincode *
+                </label>
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3, 4, 5].map((index) => (
+                    <input
+                      key={index}
+                      id={`pincode-${index}`}
+                      type="text"
+                      value={formData.pincode[index]}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value && !/^[0-9]$/.test(value)) return;
+                        const newPincode = [...formData.pincode];
+                        newPincode[index] = value;
+                        setFormData((prev) => ({
+                          ...prev,
+                          pincode: newPincode,
+                        }));
+                        const error = validateField("pincode", newPincode);
+                        setErrors((prev) => ({ ...prev, pincode: error }));
+                        if (value && index < 5) {
+                          const nextInput = document.getElementById(
+                            `pincode-${index + 1}`
+                          );
+                          if (nextInput) nextInput.focus();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "Backspace" &&
+                          !formData.pincode[index] &&
+                          index > 0
+                        ) {
+                          const prevInput = document.getElementById(
+                            `pincode-${index - 1}`
+                          );
+                          if (prevInput) prevInput.focus();
+                        }
+                      }}
+                      onBlur={() => {
+                        setTouched((prev) => ({ ...prev, pincode: true }));
+                        const error = validateField(
+                          "pincode",
+                          formData.pincode
+                        );
+                        setErrors((prev) => ({ ...prev, pincode: error }));
+                      }}
+                      maxLength="1"
+                      className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 ${
+                        errors.pincode && touched.pincode
+                          ? "border-red-300 bg-red-50"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
+                      placeholder=""
+                    />
+                  ))}
+                </div>
+                {errors.pincode && touched.pincode && (
+                  <div className="mt-1 text-xs text-red-500 text-center">
+                    {errors.pincode}
+                  </div>
                 )}
               </div>
 

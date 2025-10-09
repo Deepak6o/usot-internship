@@ -7,15 +7,29 @@ import { motion } from "framer-motion";
 const Session = () => {
   const sessions = [
     { id: 1, title: "Meet AI Like a Friend", icon: "/assets/b1.png" },
-    { id: 2, title: "AI for Projects & Assignments", icon: "/assets/b2.png" },
+    { id: 2, title: "Build your personal AI Agents", icon: "/assets/b7.png" },
     { id: 3, title: "AI for content creation", icon: "/assets/b3.png" },
-    { id: 4, title: "Social Media Smarts: The Psychology of going viral", icon: "/assets/b4.png" },
-    { id: 5, title: "Create Your Own AI Voice & Music", icon: "/assets/b5.png" },
-    { id: 6, title: "Build Your Own Game/Website (No Code)", icon: "/assets/b6.png" },
-    { id: 7, title: "Build your personal AI Agents", icon: "/assets/b7.png" },
-    { id: 8, title: "Metaverse 101: AI in Movies & Anime", icon: "/assets/b8.png" },
-    { id: 9, title: "Financial Basics for Teenagers", icon: "/assets/b9.png" },
-    { id: 10, title: "How to Build Your Personal Brand Online", icon: "/assets/b10.png" },
+    {
+      id: 4,
+      title: "Social Media Smarts: The Psychology of going viral",
+      icon: "/assets/b4.png",
+    },
+    {
+      id: 5,
+      title: "Build Your Own Game/Website (No Code)",
+      icon: "/assets/b6.png",
+    },
+    {
+      id: 6,
+      title: "Metaverse 101: AI in Movies & Anime",
+      icon: "/assets/b8.png",
+    },
+    {
+      id: 7,
+      title: "How to Build Your Personal Brand Online",
+      icon: "/assets/b10.png",
+    },
+    { id: 8, title: "Design Your App: UI/UX Basics", icon: "/assets/b2.png" },
   ];
 
   // Animation variants
@@ -43,8 +57,9 @@ const Session = () => {
             Topics for the Internship
           </h2>
           <p className="mt-4 text-base leading-7 text-gray-600 sm:mt-8 font-pj">
-            Each topic will teach essential AI and digital skills to help you thrive in the modern world. 
-            Master these cutting-edge technologies and unlock your potential.
+            Each topic will teach essential AI and digital skills to help you
+            thrive in the modern world. Master these cutting-edge technologies
+            and unlock your potential.
           </p>
         </motion.div>
 
@@ -55,7 +70,7 @@ const Session = () => {
             {sessions.map((session, index) => (
               <div
                 key={session.id}
-                className={`p-4 ${index < 9 ? "border-b border-red-400" : ""}`}
+                className={`p-4 ${index < 7 ? "border-b border-red-400" : ""}`}
               >
                 <motion.div
                   custom={index}
@@ -87,8 +102,12 @@ const Session = () => {
                 className={`p-5 ${
                   index % 2 === 0 ? "border-r border-red-400" : ""
                 } ${
-                  index < 8 && (index + 1) % 2 === 0 ? "border-b border-red-400" : ""
-                } ${index < 8 && index % 2 === 0 ? "border-b border-red-400" : ""}`}
+                  index < 6 && (index + 1) % 2 === 0
+                    ? "border-b border-red-400"
+                    : ""
+                } ${
+                  index < 6 && index % 2 === 0 ? "border-b border-red-400" : ""
+                }`}
               >
                 <motion.div
                   custom={index}
@@ -112,15 +131,15 @@ const Session = () => {
             ))}
           </div>
 
-          {/* Medium: 3x3 + 1 */}
+          {/* Medium: 4x2 */}
           <div className="hidden md:grid lg:hidden">
-            <div className="grid grid-cols-3 gap-0 mb-6">
-              {sessions.slice(0, 9).map((session, index) => (
+            <div className="grid grid-cols-4 gap-0">
+              {sessions.map((session, index) => (
                 <div
                   key={session.id}
                   className={`p-6 ${
-                    (index + 1) % 3 !== 0 ? "border-r border-red-400" : ""
-                  } ${index < 6 ? "border-b border-red-400" : ""}`}
+                    (index + 1) % 4 !== 0 ? "border-r border-red-400" : ""
+                  } ${index < 4 ? "border-b border-red-400" : ""}`}
                 >
                   <motion.div
                     custom={index}
@@ -143,37 +162,16 @@ const Session = () => {
                 </div>
               ))}
             </div>
-            {/* 10th item centered */}
-            <div className="flex justify-center">
-              <motion.div
-                className="p-6 w-1/3"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <Image
-                  src={sessions[9].icon}
-                  alt={sessions[9].title}
-                  width={60}
-                  height={60}
-                  className="object-contain w-15 h-15 m-auto mb-4"
-                />
-                <h3 className="text-sm font-semibold text-gray-900 font-pj leading-tight px-1">
-                  {sessions[9].title}
-                </h3>
-              </motion.div>
-            </div>
           </div>
 
-          {/* Large: 5x2 */}
-          <div className="hidden lg:grid grid-cols-5 gap-0">
+          {/* Large: 4x2 */}
+          <div className="hidden lg:grid grid-cols-4 gap-0">
             {sessions.map((session, index) => (
               <div
                 key={session.id}
                 className={`p-8 ${
-                  (index + 1) % 5 !== 0 ? "border-r border-red-400" : ""
-                } ${index < 5 ? "border-b border-red-400" : ""}`}
+                  (index + 1) % 4 !== 0 ? "border-r border-red-400" : ""
+                } ${index < 4 ? "border-b border-red-400" : ""}`}
               >
                 <motion.div
                   custom={index}

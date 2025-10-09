@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+/* Modal animations */
+@keyframes modalOverlayFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-overlay-fade {
+  animation: modalOverlayFade 200ms ease-out both;
+}
+
+.modal-enter {
+  animation: modalEnter 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Themed thin scrollbars */
+.custom-scroll {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #ef4444 transparent; /* thumb color, track color */
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #ef4444; /* tailwind red-500 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Hide scrollbars completely (while content can still scroll if needed) */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

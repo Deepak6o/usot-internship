@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ onClose }) => {
   const [formData, setFormData] = React.useState({
     name: "",
     phone: "",
@@ -14,9 +14,21 @@ const RegistrationForm = () => {
     pincode: ["", "", "", "", "", ""],
   });
 
+  const pincodeRefs = React.useRef([
+    React.createRef(),
+    React.createRef(),
+    React.createRef(),
+    React.createRef(),
+    React.createRef(),
+    React.createRef(),
+  ]);
+
   const [errors, setErrors] = React.useState({});
   const [touched, setTouched] = React.useState({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
+  const [showError, setShowError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const validateField = (name, value) => {
     switch (name) {
@@ -77,8 +89,9 @@ const RegistrationForm = () => {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("[RegistrationForm] submit clicked", formData);
     const newErrors = {};
     const newTouched = {};
     Object.keys(formData).forEach((key) => {
@@ -91,11 +104,25 @@ const RegistrationForm = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      setIsSubmitting(true);
-      console.log("Form submitted:", formData);
-      setTimeout(() => {
-        alert("Registration submitted successfully!");
-        setIsSubmitting(false);
+      try {
+        setIsSubmitting(true);
+        console.log("[RegistrationForm] posting to /api/registration");
+        const response = await fetch("/api/registration", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+          }),
+        });
+
+        console.log("[RegistrationForm] response status", response.status);
+        const data = await response.json();
+        console.log("[RegistrationForm] response body", data);
+        if (!response.ok || !data?.success) {
+          throw new Error(data?.error || "Failed to submit");
+        }
+
+        setShowSuccess(true);
         setFormData({
           name: "",
           phone: "",
@@ -108,16 +135,119 @@ const RegistrationForm = () => {
         });
         setErrors({});
         setTouched({});
-      }, 1000);
+      } catch (err) {
+        setErrorMessage(
+          err.message || "Something went wrong. Please try again."
+        );
+        setShowError(true);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-[70vh] px-2 sm:px-4">
+      {(showSuccess || showError) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-[2px] modal-overlay-fade"
+            onClick={() => {
+              setShowSuccess(false);
+              setShowError(false);
+            }}
+          />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-md text-center modal-enter">
+            <div
+              className={`mx-auto mb-3 h-14 w-14 rounded-full flex items-center justify-center ${
+                showSuccess ? "bg-green-100" : "bg-red-100"
+              }`}
+            >
+              {showSuccess ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-8 w-8 text-green-600"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-2.59a.75.75 0 1 0-1.06-1.06l-4.72 4.72-1.78-1.78a.75.75 0 1 0-1.06 1.06l2.31 2.31c.293.293.767.293 1.06 0l5.25-5.25Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-8 w-8 text-red-600"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12 2.25c5.385 0 9.75 4.365 9.75 9.75s-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12 6.615 2.25 12 2.25Zm-1.72 6.97a.75.75 0 0 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 0 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </div>
+            <h3 className="text-lg font-bold mb-1">
+              {showSuccess ? "Registration successful!" : "Submission failed"}
+            </h3>
+            <p className="text-gray-600 text-sm mb-5">
+              {showSuccess
+                ? "We have received your details."
+                : errorMessage || "Please try again."}
+            </p>
+            <div className="grid grid-cols-1 gap-3">
+              {showError && (
+                <button
+                  onClick={() => {
+                    setShowError(false);
+                  }}
+                  className="w-full py-2 px-4 rounded-lg text-white bg-red-600 hover:bg-red-700"
+                >
+                  Close
+                </button>
+              )}
+              {showSuccess && (
+                <button
+                  onClick={() => setShowSuccess(false)}
+                  className="w-full py-2 px-4 rounded-lg text-white bg-red-600 hover:bg-red-700"
+                >
+                  Close
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="w-full max-w-lg">
         <div className="overflow-hidden bg-white shadow-lg rounded-xl">
           {/* Header */}
-          <div className="px-4 py-4 text-center bg-gradient-to-r from-red-600 to-red-600">
+          <div className="relative px-4 py-4 text-center bg-gradient-to-r from-red-600 to-red-600">
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close"
+                className="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-white rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
             <h1 className="mb-1 text-lg sm:text-xl font-bold text-white">
               Register Now !
             </h1>
@@ -344,58 +474,77 @@ const RegistrationForm = () => {
                 <label className="block mb-1 text-sm sm:text-base font-medium text-gray-700">
                   Pincode *
                 </label>
-                <div className="flex gap-2">
+                <div
+                  className="flex gap-2"
+                  onPaste={(e) => {
+                    const pasted = (
+                      e.clipboardData.getData("text") || ""
+                    ).replace(/\D/g, "");
+                    if (pasted.length === 6) {
+                      e.preventDefault();
+                      const digits = pasted.split("").slice(0, 6);
+                      setFormData((prev) => ({ ...prev, pincode: digits }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        pincode: validateField("pincode", digits),
+                      }));
+                      const last = pincodeRefs.current[5]?.current;
+                      if (last) last.focus();
+                    }
+                  }}
+                >
                   {[0, 1, 2, 3, 4, 5].map((index) => (
                     <input
                       key={index}
-                      id={`pincode-${index}`}
+                      ref={pincodeRefs.current[index]}
                       type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
                       value={formData.pincode[index]}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        if (value && !/^[0-9]$/.test(value)) return;
+                        const raw = e.target.value.replace(/\D/g, "");
+                        const value = raw.slice(-1);
                         const newPincode = [...formData.pincode];
                         newPincode[index] = value;
                         setFormData((prev) => ({
                           ...prev,
                           pincode: newPincode,
                         }));
-                        const error = validateField("pincode", newPincode);
-                        setErrors((prev) => ({ ...prev, pincode: error }));
+                        setErrors((prev) => ({
+                          ...prev,
+                          pincode: validateField("pincode", newPincode),
+                        }));
                         if (value && index < 5) {
-                          const nextInput = document.getElementById(
-                            `pincode-${index + 1}`
-                          );
-                          if (nextInput) nextInput.focus();
+                          setTimeout(() => {
+                            pincodeRefs.current[index + 1]?.current?.focus();
+                          }, 0);
                         }
                       }}
                       onKeyDown={(e) => {
-                        if (
-                          e.key === "Backspace" &&
-                          !formData.pincode[index] &&
-                          index > 0
-                        ) {
-                          const prevInput = document.getElementById(
-                            `pincode-${index - 1}`
-                          );
-                          if (prevInput) prevInput.focus();
+                        if (e.key === "Backspace") {
+                          const newPincode = [...formData.pincode];
+                          if (newPincode[index]) {
+                            newPincode[index] = "";
+                            setFormData((prev) => ({
+                              ...prev,
+                              pincode: newPincode,
+                            }));
+                            setErrors((prev) => ({
+                              ...prev,
+                              pincode: validateField("pincode", newPincode),
+                            }));
+                          } else if (index > 0) {
+                            pincodeRefs.current[index - 1]?.current?.focus();
+                          }
                         }
                       }}
-                      onBlur={() => {
-                        setTouched((prev) => ({ ...prev, pincode: true }));
-                        const error = validateField(
-                          "pincode",
-                          formData.pincode
-                        );
-                        setErrors((prev) => ({ ...prev, pincode: error }));
-                      }}
+                      onFocus={(e) => e.target.select()}
                       maxLength="1"
                       className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 ${
                         errors.pincode && touched.pincode
                           ? "border-red-300 bg-red-50"
                           : "border-gray-300 hover:border-gray-400"
                       }`}
-                      placeholder=""
                     />
                   ))}
                 </div>
